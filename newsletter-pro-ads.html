@@ -34,8 +34,8 @@
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"></noscript>
   <style>*,::after,::before{box-sizing:border-box;margin:0;padding:0}html{font-size:16px;-webkit-text-size-adjust:100%}body{font-family:Inter,system-ui,-apple-system,sans-serif;color:#e2e8f0;background:#162542;line-height:1.6;overflow-x:hidden}a{color:inherit;text-decoration:none}img{max-width:100%;height:auto;display:block}nav{position:fixed;top:0;left:0;right:0;z-index:100;background:0 0;border-bottom:1px solid transparent;transition:background .3s,border-color .3s,backdrop-filter .3s}.nav-inner{max-width:1200px;margin:0 auto;padding:0 1.5rem;height:64px;display:flex;align-items:center;justify-content:space-between}.logo{display:flex;align-items:center;gap:.5rem;font-weight:700;font-size:1.15rem;color:#fff}.logo-icon{width:44px;height:44px}nav.nav-scrolled{background:rgba(22,37,66,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(76,68,211,.15)}.nav-links{display:flex;align-items:center;gap:1.75rem;font-size:.9rem;font-weight:500}.nav-links a{color:#94a3b8;transition:color .2s}.nav-links a.nav-active,.nav-links a:hover{color:#fff}.cta-nav{background:linear-gradient(135deg,#4c44d3,#5b52e0);color:#fff!important;padding:.5rem 1.25rem;border-radius:8px;font-weight:600;transition:.25s;box-shadow:0 2px 8px rgba(76,68,211,.3)}.cta-nav:hover{background:linear-gradient(135deg,#5b52e0,#6e5ce7);transform:translateY(-1px)}.cta-nav-outline{border:1px solid rgba(76,68,211,.4);color:#a5b4fc!important;padding:.45rem 1rem;border-radius:8px;transition:.2s}.cta-nav-outline:hover{border-color:#6e5ce7;color:#fff!important}.nav-hamburger{display:none;background:0 0;border:none;color:#fff;cursor:pointer;padding:.5rem}.hero{padding:9rem 0 6rem;text-align:center;background:linear-gradient(180deg,#162542 0,#1a2040 60%,#162542 100%);position:relative;overflow:hidden}.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:900px;height:900px;background:radial-gradient(circle,rgba(76,68,211,.18) 0,rgba(110,92,231,.06) 40%,transparent 70%);pointer-events:none}.container{max-width:1200px;margin:0 auto;padding:0 1.5rem}h1,h2,h3,h4,h5{color:#fff;line-height:1.2;font-weight:700;text-wrap:balance}h1{font-size:clamp(2.25rem,5vw,3.5rem);letter-spacing:-.03em}.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s,transform .6s}.fade-in-visible{opacity:1;transform:translateY(0)}@media(max-width:768px){.nav-links{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;background:rgba(15,23,42,.98);padding:1.5rem;gap:1rem;border-bottom:1px solid rgba(76,68,211,.15);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}.nav-links.open{display:flex;animation:.3s slideDown}@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}.nav-hamburger{display:block}.hero{padding:8rem 0 4rem}}</style>
-  <link rel="preload" href="styles.css?v=e20750b9" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="styles.css?v=e20750b9"></noscript>
+  <link rel="preload" href="styles.css?v=d70c2bb8" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="styles.css?v=d70c2bb8"></noscript>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -47,7 +47,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <a href="/" class="logo">
       <img class="logo-icon" src="assets/logo-icon.png" alt="Broker Toolkit">
     </a>
-    <a href="https://my.brokertoolkit.app" class="cta-nav">Start Free Trial</a>
+    <button type="button" class="cta-nav js-open-trial" style="border: none; cursor: pointer;">Start Free Trial</button>
   </div>
 </nav>
 
@@ -73,8 +73,9 @@ document.addEventListener('scroll', function() {
       <div class="hero-badge"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="display: inline; margin-right: 6px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="7" y1="16" x2="13" y2="16"/></svg>Newsletter Pro</div>
       <h1 style="max-width: 900px; margin: 0 auto 1.25rem; word-spacing: 0.1em;">Your Best Referrals Come From Past Clients</h1>
       <p class="hero-sub">Mortgage professionals lose touch after closing. Newsletter Pro generates local content in 10 minutes so you stay top of mind in your GHL account. Send consistently, watch your repeat business grow.</p>
-      <div class="hero-ctas">
-        <a href="https://my.brokertoolkit.app" class="btn btn-primary btn-lg">Start Free Trial</a>
+      <div class="hero-ctas" style="display: flex; flex-direction: column; align-items: center; gap: 0.2rem;">
+        <button type="button" class="btn btn-primary btn-lg js-open-trial" style="border: none; cursor: pointer;">Start Free Trial</button>
+        <p style="color: #94a3b8; font-size: 0.85rem; margin: 0;">No credit card required</p>
       </div>
     </div>
   </div>
@@ -125,7 +126,10 @@ document.addEventListener('scroll', function() {
     <div class="cta-content">
       <h2>One Month of Consistent Contact = Referrals</h2>
       <p>Most referrals come from past clients who remember you when they're ready to buy or refi. Newsletter Pro keeps your past clients top of mind every week—automatically, without the busywork. Send from your HighLevel account. $97/month. Free to try.</p>
-      <a href="https://my.brokertoolkit.app" class="btn btn-primary btn-lg">Start Your Free Trial</a>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.2rem;">
+        <button type="button" class="btn btn-primary btn-lg js-open-trial" style="border: none; cursor: pointer;">Start Your Free Trial</button>
+        <p style="color: #94a3b8; font-size: 0.85rem; margin: 0;">No credit card required</p>
+      </div>
     </div>
   </div>
 </section>
@@ -207,10 +211,94 @@ document.addEventListener('scroll', function() {
     <div class="cta-content">
       <h2>Built for Mortgage Professionals. Works Inside HighLevel.</h2>
       <p>Newsletter Pro + Activity Tracker + Rate Monitor + Loan Advisor = everything mortgage brokers need to stay organized, keep clients engaged, and close more deals. All inside your HighLevel account. No new platform. No learning curve. Free trial. $97/month when you're ready.</p>
-      <a href="https://my.brokertoolkit.app" class="btn btn-primary btn-lg">Try Free for 7 Days</a>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.2rem;">
+        <button type="button" class="btn btn-primary btn-lg js-open-trial" style="border: none; cursor: pointer;">Try Free for 7 Days</button>
+        <p style="color: #94a3b8; font-size: 0.85rem; margin: 0;">No credit card required</p>
+      </div>
     </div>
   </div>
 </section>
+
+<!-- TRIAL MODAL -->
+<div class="modal-overlay" id="trialModal" aria-hidden="true">
+  <section class="modal" role="dialog" aria-modal="true" aria-labelledby="trial-modal-title">
+    <div class="modal-head">
+      <div>
+        <h3 id="trial-modal-title" style="margin-bottom: 0.25rem;">Close More Deals in 7 Days</h3>
+        <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Get all 4 tools free. No credit card required.</p>
+      </div>
+      <button class="modal-close" type="button" id="closeModal" aria-label="Close">×</button>
+    </div>
+    <div style="background: rgba(76, 68, 211, 0.08); border-left: 3px solid #6e5ce7; padding: 0.8rem; border-radius: 6px; margin-bottom: 1rem; font-size: 0.85rem; color: #cbd5e1;">
+      <strong style="color: #fff;">What you get:</strong> Newsletter Pro, Activity Tracker, Rate Monitor, Loan Advisor — all integrated into HighLevel or standalone.
+    </div>
+    <form id="trial-signup-form" novalidate>
+      <div class="join-field"><label for="email">Work email *</label><input id="email" name="email" type="email" autocomplete="email" placeholder="you@broker.com" required></div>
+      <div class="join-field"><label for="firstName">First name *</label><input id="firstName" name="firstName" type="text" autocomplete="given-name" placeholder="John" required></div>
+      <div class="join-field"><label for="lastName">Last name *</label><input id="lastName" name="lastName" type="text" autocomplete="family-name" placeholder="Smith" required></div>
+      <div class="join-field"><label for="companyName">Company/Broker firm (optional)</label><input id="companyName" name="companyName" type="text" autocomplete="organization" placeholder="Your firm name"></div>
+      <button class="join-submit" id="submitBtn" type="submit">Unlock Free Trial</button>
+      <div class="join-status" id="joinStatus" aria-live="polite"></div>
+      <p class="join-note">No credit card. Cancel anytime. No contracts.</p>
+    </form>
+  </section>
+</div>
+
+<style>
+.modal-overlay { position: fixed; inset: 0; background: rgba(2,6,23,.78); z-index: 200; display:none; align-items:center; justify-content:center; padding:1rem; }
+.modal-overlay.open { display:flex; }
+.modal { width:100%; max-width:520px; background:#0f172a; border:1px solid rgba(76,68,211,.35); border-radius:16px; padding:1.2rem 1.2rem 1rem; box-shadow:0 24px 90px rgba(0,0,0,.5); }
+.modal-head { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:.8rem; }
+.modal-head h3 { font-size:1.2rem; margin:0; }
+.modal-close { background:transparent; border:none; color:#94a3b8; font-size:1.4rem; cursor:pointer; }
+.join-field { margin-bottom:.9rem; }
+.join-field label { display:block; color:#cbd5e1; font-weight:600; font-size:.88rem; margin-bottom:.35rem; }
+.join-field input { width:100%; padding:.8rem .85rem; background:#0b1220; border:1px solid rgba(100,116,139,.45); border-radius:10px; color:#e2e8f0; font-size:.95rem; }
+.join-field input:focus { outline:none; border-color:#6e5ce7; box-shadow:0 0 0 2px rgba(110,92,231,.2); }
+.join-submit { width:100%; margin-top:.35rem; border:none; cursor:pointer; background:linear-gradient(135deg,#4c44d3,#5b52e0); color:#fff; padding:.9rem 1rem; border-radius:10px; font-weight:700; font-size:.95rem; }
+.join-submit:disabled { opacity:.65; cursor:not-allowed; }
+.join-note { margin-top:.75rem; font-size:.78rem; color:#94a3b8; }
+.join-status { margin-top:.85rem; font-size:.9rem; min-height:1.25rem; }
+.join-status.ok { color:#22c55e; }
+.join-status.err { color:#f87171; }
+</style>
+
+<script>
+(function(){
+  const modal=document.getElementById('trialModal');
+  const form=document.getElementById('trial-signup-form');
+  const statusEl=document.getElementById('joinStatus');
+  const submitBtn=document.getElementById('submitBtn');
+  const closeModalBtn=document.getElementById('closeModal');
+  const openButtons=Array.from(document.querySelectorAll('.js-open-trial'));
+  const params=new URLSearchParams(window.location.search);
+  const attribution={utm_source:params.get('utm_source')||'',utm_medium:params.get('utm_medium')||'',utm_campaign:params.get('utm_campaign')||'',utm_content:params.get('utm_content')||'',utm_term:params.get('utm_term')||''};
+  function track(eventName,extra){window.dataLayer=window.dataLayer||[];window.dataLayer.push(Object.assign({event:eventName,page_path:window.location.pathname},attribution,extra||{}));}
+  function openModal(){modal.classList.add('open');modal.setAttribute('aria-hidden','false');setTimeout(()=>document.getElementById('email')?.focus(),10);track('trial_signup_modal_open');}
+  function closeModal(){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');}
+  openButtons.forEach(btn=>btn.addEventListener('click',(e)=>{e.preventDefault();openModal();}));
+  closeModalBtn?.addEventListener('click',closeModal);
+  modal?.addEventListener('click',(e)=>{if(e.target===modal) closeModal();});
+  document.addEventListener('keydown',(e)=>{if(e.key==='Escape'&&modal.classList.contains('open')) closeModal();});
+  form?.addEventListener('submit',async(e)=>{
+    e.preventDefault();
+    const fd=new FormData(form);
+    const payload={email:String(fd.get('email')||'').trim(),firstName:String(fd.get('firstName')||'').trim(),lastName:String(fd.get('lastName')||'').trim(),companyName:String(fd.get('companyName')||'').trim(),...attribution,fbclid:params.get('fbclid')||'',gclid:params.get('gclid')||'',gbraid:params.get('gbraid')||'',msclkid:params.get('msclkid')||'',twclid:params.get('twclid')||''};
+    if(!payload.email||!payload.firstName||!payload.lastName){statusEl.textContent='Please complete all required fields.';statusEl.className='join-status err';track('trial_signup_validation_error',{reason:'missing_required_fields'});return;}
+    submitBtn.disabled=true;submitBtn.textContent='Submitting...';statusEl.textContent='';statusEl.className='join-status';track('trial_signup_submit',{has_company:!!payload.companyName});
+    try{
+      const res=await fetch('/api/trial-signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      const data=await res.json().catch(()=>({}));
+      if(!res.ok){
+        if(res.status===409){const signInUrl='https://my.brokertoolkit.app';statusEl.innerHTML=`An account with this email already exists. <a href="${signInUrl}" target="_blank" rel="noopener" style="color:#c7d2fe;text-decoration:underline;">Sign in here</a>.`;statusEl.className='join-status err';track('trial_signup_conflict',{has_company:!!payload.companyName});return;}
+        throw new Error(data.error||'Signup failed');
+      }
+      track('trial_signup_success',{has_company:!!payload.companyName});statusEl.textContent='Success. Your free trial request was submitted.';statusEl.className='join-status ok';form.reset();
+    }catch(err){track('trial_signup_error',{error_message:err.message||'unknown_error'});statusEl.textContent='Sorry, we could not submit your request. Please try again.';statusEl.className='join-status err';}
+    finally{submitBtn.disabled=false;submitBtn.textContent='Unlock Free Trial';}
+  });
+})();
+</script>
 
 <footer>
   <div class="footer-inner">
@@ -251,6 +339,6 @@ document.addEventListener('scroll', function() {
 <!-- Empower Analytics -->
 
 
-<script src="main.js?v=4026ee98" defer></script>
+<script src="main.js?v=005d902d" defer></script>
 </body>
 </html>

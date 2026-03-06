@@ -17,6 +17,7 @@ const PARTIALS_DIR = path.join(ROOT, 'src', 'partials');
 
 const navHtml = fs.readFileSync(path.join(PARTIALS_DIR, 'nav.html'), 'utf8');
 const footerHtml = fs.readFileSync(path.join(PARTIALS_DIR, 'footer.html'), 'utf8');
+const modalHtml = fs.readFileSync(path.join(PARTIALS_DIR, 'modal.html'), 'utf8');
 
 // Load and minify critical CSS for inlining
 const criticalCssRaw = fs.readFileSync(path.join(ROOT, 'src', 'critical.css'), 'utf8');
@@ -76,6 +77,7 @@ for (const page of pages) {
 
   content = content.replace('<!-- NAV -->', processedNav);
   content = content.replace('<!-- FOOTER -->', processedFooter);
+  content = content.replace('<!-- MODAL -->', modalHtml);
 
   // Replace styles.css with inline critical CSS + deferred full CSS
   const stylesHref = depth > 0 ? `${prefix}styles.css?v=${cssHash}` : `styles.css?v=${cssHash}`;
