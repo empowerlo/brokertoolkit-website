@@ -295,7 +295,7 @@
   form?.addEventListener('submit',async(e)=>{
     e.preventDefault();
     const fd=new FormData(form);
-    const payload={email:String(fd.get('email')||'').trim(),firstName:String(fd.get('firstName')||'').trim(),lastName:String(fd.get('lastName')||'').trim(),companyName:String(fd.get('companyName')||'').trim()};
+    const payload={email:String(fd.get('email')||'').trim(),firstName:String(fd.get('firstName')||'').trim(),lastName:String(fd.get('lastName')||'').trim(),companyName:String(fd.get('companyName')||'').trim(),...attribution,fbclid:params.get('fbclid')||'',gclid:params.get('gclid')||'',gbraid:params.get('gbraid')||'',msclkid:params.get('msclkid')||'',twclid:params.get('twclid')||''};
     if(!payload.email||!payload.firstName||!payload.lastName){statusEl.textContent='Please complete all required fields.';statusEl.className='join-status err';track('trial_signup_validation_error',{reason:'missing_required_fields'});return;}
     submitBtn.disabled=true;submitBtn.textContent='Submitting...';statusEl.textContent='';statusEl.className='join-status';track('trial_signup_submit',{has_company:!!payload.companyName});
     try{
