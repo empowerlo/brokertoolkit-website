@@ -28,7 +28,29 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<!-- NAV -->
+<nav style="position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: transparent; border-bottom: 1px solid transparent; transition: background .3s, border-color .3s, backdrop-filter .3s;">
+  <div class="nav-inner" style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; height: 64px; display: flex; align-items: center; justify-content: space-between;">
+    <a href="/" class="logo" style="display: flex; align-items: center; gap: .5rem; font-weight: 700; font-size: 1.15rem; color: #fff;">
+      <img class="logo-icon" src="assets/logo-icon.png" alt="Broker Toolkit" style="width: 44px; height: 44px;">
+    </a>
+    <a href="https://my.brokertoolkit.app" class="cta-nav" style="background: linear-gradient(135deg,#4c44d3,#5b52e0); color: #fff!important; padding: .5rem 1.25rem; border-radius: 8px; font-weight: 600; transition: .25s; box-shadow: 0 2px 8px rgba(76,68,211,.3);">Start Free Trial</a>
+  </div>
+</nav>
+
+<script>
+document.addEventListener('scroll', function() {
+  const nav = document.querySelector('nav');
+  if (window.scrollY > 10) {
+    nav.style.background = 'rgba(22, 37, 66, 0.95)';
+    nav.style.backdropFilter = 'blur(12px)';
+    nav.style.borderBottom = '1px solid rgba(76, 68, 211, 0.15)';
+  } else {
+    nav.style.background = 'transparent';
+    nav.style.backdropFilter = 'none';
+    nav.style.borderBottom = '1px solid transparent';
+  }
+});
+</script>
 
 <!-- HERO SECTION -->
 <section class="hero">

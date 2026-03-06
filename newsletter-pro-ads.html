@@ -42,33 +42,29 @@
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-53N4ZRS3"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
-<nav>
-  <div class="nav-inner">
-    <a href="/" class="logo">
-      <img class="logo-icon" src="assets/logo-icon.png" alt="Broker Toolkit">
+<nav style="position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: transparent; border-bottom: 1px solid transparent; transition: background .3s, border-color .3s, backdrop-filter .3s;">
+  <div class="nav-inner" style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; height: 64px; display: flex; align-items: center; justify-content: space-between;">
+    <a href="/" class="logo" style="display: flex; align-items: center; gap: .5rem; font-weight: 700; font-size: 1.15rem; color: #fff;">
+      <img class="logo-icon" src="assets/logo-icon.png" alt="Broker Toolkit" style="width: 44px; height: 44px;">
     </a>
-    <div class="nav-links">
-      <a href="/" data-nav-id="home">Home</a>
-      <div class="nav-dropdown" data-nav-id="features" class="nav-active">
-        <a href="features" class="nav-dropdown-trigger">Features <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 4px;"><path d="M1 1l4 4 4-4"/></svg></a>
-        <div class="nav-dropdown-menu">
-          <a href="features">All Features</a>
-          <a href="newsletter-pro">Newsletter Pro</a>
-          <a href="activity-tracker">Activity Tracker</a>
-          <a href="rate-monitor">Rate Monitor</a>
-          <a href="loan-advisor">Loan Advisor</a>
-        </div>
-      </div>
-      <a href="pricing" data-nav-id="pricing">Pricing</a>
-      <a href="https://highlevelformortgagepros.com" target="_blank" rel="noopener" data-nav-id="community" class="cta-nav-outline">HL4 Community</a>
-      <a href="https://my.brokertoolkit.app" class="cta-nav">Start Free Trial</a>
-    </div>
-    <button class="nav-hamburger" aria-label="Menu">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-    </button>
+    <a href="https://my.brokertoolkit.app" class="cta-nav" style="background: linear-gradient(135deg,#4c44d3,#5b52e0); color: #fff!important; padding: .5rem 1.25rem; border-radius: 8px; font-weight: 600; transition: .25s; box-shadow: 0 2px 8px rgba(76,68,211,.3);">Start Free Trial</a>
   </div>
 </nav>
 
+<script>
+document.addEventListener('scroll', function() {
+  const nav = document.querySelector('nav');
+  if (window.scrollY > 10) {
+    nav.style.background = 'rgba(22, 37, 66, 0.95)';
+    nav.style.backdropFilter = 'blur(12px)';
+    nav.style.borderBottom = '1px solid rgba(76, 68, 211, 0.15)';
+  } else {
+    nav.style.background = 'transparent';
+    nav.style.backdropFilter = 'none';
+    nav.style.borderBottom = '1px solid transparent';
+  }
+});
+</script>
 
 <!-- HERO SECTION -->
 <section class="hero">
