@@ -70,8 +70,8 @@
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"></noscript>
   <style>*,::after,::before{box-sizing:border-box;margin:0;padding:0}html{font-size:16px;-webkit-text-size-adjust:100%}body{font-family:Inter,system-ui,-apple-system,sans-serif;color:#e2e8f0;background:#162542;line-height:1.6;overflow-x:hidden}a{color:inherit;text-decoration:none}img{max-width:100%;height:auto;display:block}nav{position:fixed;top:0;left:0;right:0;z-index:100;background:0 0;border-bottom:1px solid transparent;transition:background .3s,border-color .3s,backdrop-filter .3s}.nav-inner{max-width:1200px;margin:0 auto;padding:0 1.5rem;height:64px;display:flex;align-items:center;justify-content:space-between}.logo{display:flex;align-items:center;gap:.5rem;font-weight:700;font-size:1.15rem;color:#fff}.logo-icon{width:44px;height:44px}nav.nav-scrolled{background:rgba(22,37,66,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(76,68,211,.15)}.nav-links{display:flex;align-items:center;gap:1.75rem;font-size:.9rem;font-weight:500}.nav-links a{color:#94a3b8;transition:color .2s}.nav-links a.nav-active,.nav-links a:hover{color:#fff}.cta-nav{background:linear-gradient(135deg,#4c44d3,#5b52e0);color:#fff!important;padding:.5rem 1.25rem;border-radius:8px;font-weight:600;transition:.25s;box-shadow:0 2px 8px rgba(76,68,211,.3)}.cta-nav:hover{background:linear-gradient(135deg,#5b52e0,#6e5ce7);transform:translateY(-1px)}.cta-nav-outline{border:1px solid rgba(76,68,211,.4);color:#a5b4fc!important;padding:.45rem 1rem;border-radius:8px;transition:.2s}.cta-nav-outline:hover{border-color:#6e5ce7;color:#fff!important}.nav-hamburger{display:none;background:0 0;border:none;color:#fff;cursor:pointer;padding:.5rem}.hero{padding:9rem 0 6rem;text-align:center;background:linear-gradient(180deg,#162542 0,#1a2040 60%,#162542 100%);position:relative;overflow:hidden}.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:900px;height:900px;background:radial-gradient(circle,rgba(76,68,211,.18) 0,rgba(110,92,231,.06) 40%,transparent 70%);pointer-events:none}.container{max-width:1200px;margin:0 auto;padding:0 1.5rem}h1,h2,h3,h4,h5{color:#fff;line-height:1.2;font-weight:700;text-wrap:balance}h1{font-size:clamp(2.25rem,5vw,3.5rem);letter-spacing:-.03em}.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s,transform .6s}.fade-in-visible{opacity:1;transform:translateY(0)}@media(max-width:768px){.nav-links{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;background:rgba(15,23,42,.98);padding:1.5rem;gap:1rem;border-bottom:1px solid rgba(76,68,211,.15);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}.nav-links.open{display:flex;animation:.3s slideDown}@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}.nav-hamburger{display:block}.hero{padding:8rem 0 4rem}}</style>
-  <link rel="preload" href="styles.css?v=06c6bbbb" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="styles.css?v=06c6bbbb"></noscript>
+  <link rel="preload" href="styles.css?v=833c7525" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="styles.css?v=833c7525"></noscript>
 <style>
     .nav-links .cta-nav { border: none; cursor: pointer; display:inline-flex; align-items:center; justify-content:center; font-size:1.05rem; font-weight:700; line-height:1; padding:.78rem 1.6rem; border-radius:10px; letter-spacing:.01em; box-shadow:0 6px 18px rgba(76,68,211,.42); }
     .modal-overlay { position: fixed; inset: 0; background: rgba(2,6,23,.78); z-index: 200; display:none; align-items:center; justify-content:center; padding:1rem; }
@@ -271,17 +271,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="modal-overlay" id="trialModal" aria-hidden="true">
   <section class="modal" role="dialog" aria-modal="true" aria-labelledby="trial-modal-title">
     <div class="modal-head">
-      <h3 id="trial-modal-title">Start your free trial</h3>
+      <div>
+        <h3 id="trial-modal-title" style="margin-bottom: 0.25rem;">Close More Deals in 7 Days</h3>
+        <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Get all 4 tools free. No credit card required.</p>
+      </div>
       <button class="modal-close" type="button" id="closeModal" aria-label="Close">×</button>
     </div>
+    
+    <div style="background: rgba(76, 68, 211, 0.08); border-left: 3px solid #6e5ce7; padding: 0.8rem; border-radius: 6px; margin-bottom: 1rem; font-size: 0.85rem; color: #cbd5e1;">
+      <strong style="color: #fff;">What you get:</strong> Newsletter Pro, Activity Tracker, Rate Monitor, Loan Advisor — all integrated into HighLevel or standalone.
+    </div>
+    
     <form id="trial-signup-form" novalidate>
-      <div class="join-field"><label for="firstName">First name *</label><input id="firstName" name="firstName" type="text" autocomplete="given-name" required></div>
-      <div class="join-field"><label for="lastName">Last name *</label><input id="lastName" name="lastName" type="text" autocomplete="family-name" required></div>
-      <div class="join-field"><label for="email">Work email *</label><input id="email" name="email" type="email" autocomplete="email" required></div>
-      <div class="join-field"><label for="companyName">Company name (optional)</label><input id="companyName" name="companyName" type="text" autocomplete="organization"></div>
-      <button class="join-submit" id="submitBtn" type="submit">Start free trial</button>
+      <div class="join-field"><label for="email">Work email *</label><input id="email" name="email" type="email" autocomplete="email" placeholder="you@broker.com" required></div>
+      <div class="join-field"><label for="firstName">First name *</label><input id="firstName" name="firstName" type="text" autocomplete="given-name" placeholder="John" required></div>
+      <div class="join-field"><label for="lastName">Last name *</label><input id="lastName" name="lastName" type="text" autocomplete="family-name" placeholder="Smith" required></div>
+      <div class="join-field"><label for="companyName">Company/Broker firm (optional)</label><input id="companyName" name="companyName" type="text" autocomplete="organization" placeholder="Your firm name"></div>
+      <button class="join-submit" id="submitBtn" type="submit">Unlock Free Trial</button>
       <div class="join-status" id="joinStatus" aria-live="polite"></div>
-      <p class="join-note">By submitting, you agree to our terms and privacy policy.</p>
+      <p class="join-note">No credit card. Cancel anytime. No contracts.</p>
     </form>
   </section>
 </div>
@@ -346,7 +354,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   form?.addEventListener('submit',async(e)=>{
     e.preventDefault();
     const fd=new FormData(form);
-    const payload={email:String(fd.get('email')||'').trim(),firstName:String(fd.get('firstName')||'').trim(),lastName:String(fd.get('lastName')||'').trim(),companyName:String(fd.get('companyName')||'').trim()};
+    const payload={email:String(fd.get('email')||'').trim(),firstName:String(fd.get('firstName')||'').trim(),lastName:String(fd.get('lastName')||'').trim(),companyName:String(fd.get('companyName')||'').trim(),...attribution,fbclid:params.get('fbclid')||'',gclid:params.get('gclid')||'',gbraid:params.get('gbraid')||'',msclkid:params.get('msclkid')||'',twclid:params.get('twclid')||''};
     if(!payload.email||!payload.firstName||!payload.lastName){statusEl.textContent='Please complete all required fields.';statusEl.className='join-status err';track('trial_signup_validation_error',{reason:'missing_required_fields'});return;}
     submitBtn.disabled=true;submitBtn.textContent='Submitting...';statusEl.textContent='';statusEl.className='join-status';track('trial_signup_submit',{has_company:!!payload.companyName});
     try{

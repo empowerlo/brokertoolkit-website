@@ -257,17 +257,25 @@
 <div class="modal-overlay" id="trialModal" aria-hidden="true">
   <section class="modal" role="dialog" aria-modal="true" aria-labelledby="trial-modal-title">
     <div class="modal-head">
-      <h3 id="trial-modal-title">Start your free trial</h3>
+      <div>
+        <h3 id="trial-modal-title" style="margin-bottom: 0.25rem;">Close More Deals in 7 Days</h3>
+        <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Get all 4 tools free. No credit card required.</p>
+      </div>
       <button class="modal-close" type="button" id="closeModal" aria-label="Close">×</button>
     </div>
+    
+    <div style="background: rgba(76, 68, 211, 0.08); border-left: 3px solid #6e5ce7; padding: 0.8rem; border-radius: 6px; margin-bottom: 1rem; font-size: 0.85rem; color: #cbd5e1;">
+      <strong style="color: #fff;">What you get:</strong> Newsletter Pro, Activity Tracker, Rate Monitor, Loan Advisor — all integrated into HighLevel or standalone.
+    </div>
+    
     <form id="trial-signup-form" novalidate>
-      <div class="join-field"><label for="firstName">First name *</label><input id="firstName" name="firstName" type="text" autocomplete="given-name" required></div>
-      <div class="join-field"><label for="lastName">Last name *</label><input id="lastName" name="lastName" type="text" autocomplete="family-name" required></div>
-      <div class="join-field"><label for="email">Work email *</label><input id="email" name="email" type="email" autocomplete="email" required></div>
-      <div class="join-field"><label for="companyName">Company name (optional)</label><input id="companyName" name="companyName" type="text" autocomplete="organization"></div>
-      <button class="join-submit" id="submitBtn" type="submit">Start free trial</button>
+      <div class="join-field"><label for="email">Work email *</label><input id="email" name="email" type="email" autocomplete="email" placeholder="you@broker.com" required></div>
+      <div class="join-field"><label for="firstName">First name *</label><input id="firstName" name="firstName" type="text" autocomplete="given-name" placeholder="John" required></div>
+      <div class="join-field"><label for="lastName">Last name *</label><input id="lastName" name="lastName" type="text" autocomplete="family-name" placeholder="Smith" required></div>
+      <div class="join-field"><label for="companyName">Company/Broker firm (optional)</label><input id="companyName" name="companyName" type="text" autocomplete="organization" placeholder="Your firm name"></div>
+      <button class="join-submit" id="submitBtn" type="submit">Unlock Free Trial</button>
       <div class="join-status" id="joinStatus" aria-live="polite"></div>
-      <p class="join-note">By submitting, you agree to our terms and privacy policy.</p>
+      <p class="join-note">No credit card. Cancel anytime. No contracts.</p>
     </form>
   </section>
 </div>
