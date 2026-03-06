@@ -51,10 +51,10 @@ nav.nav-scrolled {
 .cta-nav {
   background: linear-gradient(135deg, #4c44d3, #5b52e0);
   color: #fff !important;
-  padding: 0.5rem 1.25rem !important;
+  padding: 0.6rem 1.5rem !important;
   border-radius: 8px;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   transition: all 0.25s;
   box-shadow: 0 2px 8px rgba(76, 68, 211, 0.3);
   display: inline-block;
@@ -64,7 +64,7 @@ button.cta-nav {
   border: none;
   cursor: pointer;
   font-family: inherit;
-  line-height: 1;
+  line-height: 1.2;
 }
 .cta-nav:hover { background: linear-gradient(135deg, #5b52e0, #6e5ce7); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(76, 68, 211, 0.4); }
 .cta-nav-outline {
