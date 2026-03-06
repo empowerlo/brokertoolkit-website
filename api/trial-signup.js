@@ -71,15 +71,28 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    // Send to LeadConnectorHQ webhook asynchronously (fire and forget)
-    fetch('https://services.leadconnectorhq.com/hooks/AXcZvDtotVT7XNDCDYJp/webhook-trigger/66fb7eb5-8026-46df-9837-78937037343c', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    }).catch(err => {
-      console.error('LeadConnectorHQ webhook failed:', err.message);
-      // Don't fail the form submission if the webhook fails
-    });
+    // Send to LeadConnectorHQ webhook (with timeout, won't block on failure)
+    const webhookUrl = 'https://services.leadconnectorhq.com/hooks/AXcZvDtotVT7XNDCDYJp/webhook-trigger/66fb7eb5-8026-46df-9837-78937037343c';
+    
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 3000);
+      
+      const webhookRes = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeout);
+      
+      const webhookData = await webhookRes.text();
+      console.log(`LeadConnectorHQ webhook (${webhookRes.status}):`, webhookData);
+    } catch (err) {
+      console.error('LeadConnectorHQ webhook error:', err.message);
+      // Don't fail the form submission if webhook fails
+    }
 
     return res.status(200).json({ success: true, data });
   } catch (err) {
