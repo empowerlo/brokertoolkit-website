@@ -150,7 +150,7 @@ nav.nav-scrolled {
 
 /* === Feature Cards (grid) === */
 .features-grid {
-  display: grid; grid-template-columns: repeat(2, 1fr);
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
 }
 .feature-card {
@@ -173,9 +173,12 @@ nav.nav-scrolled {
 .feature-card .learn-more-link:hover { color: #a5b4fc; gap: 0.5rem; }
 .feature-icon {
   width: 52px; height: 52px; border-radius: 14px;
-  background: rgba(76, 68, 211, 0.15); color: #6e68e0;
+  background: transparent; color: #6e68e0;
   display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem;
   font-size: 1.5rem;
+}
+.feature-icon svg {
+  width: 48px; height: 48px;
 }
 .feature-card h3 { margin-bottom: 0.75rem; font-size: 1.15rem; }
 .feature-card p { color: #94a3b8; font-size: 0.9rem; line-height: 1.65; }
