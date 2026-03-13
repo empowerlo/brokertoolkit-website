@@ -131,6 +131,48 @@ const mainJsRaw = fs.readFileSync(path.join(ROOT, 'src', 'main.js'), 'utf8');
 terserMinify(mainJsRaw, { compress: true, mangle: true }).then(result => {
   fs.writeFileSync(path.join(ROOT, 'main.js'), result.code);
   console.log(`  ✓ main.js: ${mainJsRaw.length} → ${result.code.length} bytes`);
+  
+// Generate sitemap.xml
+function generateSitemap(pagesList) {
+  const urls = [];
+  const BASE_URL = 'https://brokertoolkit.app';
+
+  for (const page of pagesList) {
+    if (page === '404.html' || page.startsWith('admin') || page.startsWith('internal') || page.includes('_variants')) continue;
+
+    const fullPath = path.join(ROOT, page);
+    if (!fs.existsSync(fullPath)) continue;
+
+    const content = fs.readFileSync(fullPath, 'utf8');
+    
+    // Skip if noindex is specified
+    if (content.includes('<meta name="robots" content="noindex"')) continue;
+
+    // Convert filename to URL path
+    let urlPath = page;
+    if (urlPath === 'index.html') urlPath = '';
+    else if (urlPath.endsWith('/index.html')) urlPath = urlPath.slice(0, -11);
+    else if (urlPath.endsWith('.html')) urlPath = urlPath.slice(0, -5);
+
+    // Default priority logic
+    let priority = '0.7';
+    if (urlPath === '') priority = '1.0';
+    else if (!urlPath.includes('/')) priority = '0.8';
+    else if (urlPath.startsWith('blog/')) priority = '0.6';
+
+    urls.push(`  <url><loc>${BASE_URL}/${urlPath}</loc><priority>${priority}</priority></url>`);
+  }
+
+  // Sort URLs alphabetically
+  urls.sort();
+
+  const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>`;
+  fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), sitemapContent);
+  console.log('\nGenerated sitemap.xml with ' + urls.length + ' pages');
+}
+
+generateSitemap(pages);
+
   console.log('\nBuild complete!');
 }).catch(err => {
   console.error('  ✗ main.js minification failed:', err.message);
