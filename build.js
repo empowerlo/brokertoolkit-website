@@ -17,6 +17,9 @@ const PARTIALS_DIR = path.join(ROOT, 'src', 'partials');
 
 const navHtml = fs.readFileSync(path.join(PARTIALS_DIR, 'nav.html'), 'utf8');
 const footerHtml = fs.readFileSync(path.join(PARTIALS_DIR, 'footer.html'), 'utf8');
+const adminChatHtml = fs.existsSync(path.join(PARTIALS_DIR, 'admin-chat.html'))
+  ? fs.readFileSync(path.join(PARTIALS_DIR, 'admin-chat.html'), 'utf8')
+  : '';
 const modalHtml = fs.readFileSync(path.join(PARTIALS_DIR, 'modal.html'), 'utf8');
 
 // Load and minify critical CSS for inlining
@@ -110,6 +113,11 @@ for (const page of pages) {
   // Preconnect hints
   const preconnects = `<link rel="preconnect" href="https://fonts.googleapis.com">\n  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>`;
   content = content.replace('<meta charset="UTF-8">', '<meta charset="UTF-8">\n  ' + preconnects);
+
+  // Inject admin chat widget (on all pages except admin)
+  if (adminChatHtml && !page.includes('admin')) {
+    content = content.replace('</body>', adminChatHtml + '\n</body>');
+  }
 
   const outPath = path.join(ROOT, page);
   const outDir = path.dirname(outPath);

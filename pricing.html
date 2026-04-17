@@ -254,5 +254,963 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
 <script src="main.js?v=005d902d" defer></script>
+<!-- Admin Chat Widget — only renders for authenticated admins -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function() {
+  const SUPABASE_URL = 'https://mltgtiazvnxjlsznzywz.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1sdGd0aWF6dm54amxzem56eXd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIwOTUzNTksImV4cCI6MjA1NzY3MTM1OX0.CrOC4ps7hYa1fBJg8V_1wPJOaNXx7OjUlfRx67VM8wI';
+
+  if (!window.supabase) return;
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  sb.auth.getSession().then(({ data }) => {
+    if (!data.session) return;
+    initAdminChat(data.session);
+  });
+
+  function initAdminChat(session) {
+    const style = document.createElement('style');
+    style.textContent = `
+      #admin-chat-toggle {
+        position: fixed; bottom: 24px; right: 24px; z-index: 99999;
+        width: 56px; height: 56px; border-radius: 50%;
+        background: linear-gradient(135deg, #4c44d3, #3d35b0);
+        border: none; cursor: pointer;
+        box-shadow: 0 4px 20px rgba(76,68,211,0.4);
+        display: flex; align-items: center; justify-content: center;
+        transition: transform 0.2s, box-shadow 0.2s;
+        user-select: none; -webkit-user-select: none;
+      }
+      #admin-chat-toggle:hover { transform: scale(1.05); box-shadow: 0 6px 28px rgba(76,68,211,0.5); }
+      .ac-drag-tab {
+        position: absolute; top: -10px; left: 50%; transform: translateX(-50%) scale(0);
+        width: 28px; height: 16px; background: #253a5e; border-radius: 6px 6px 0 0;
+        cursor: grab; display: flex; align-items: center; justify-content: center;
+        opacity: 0; transition: opacity 0.2s, transform 0.2s;
+        border: 1px solid #354a6e; border-bottom: none;
+      }
+      .ac-drag-tab:active { cursor: grabbing; }
+      .ac-drag-tab svg { width: 14px; height: 8px; }
+      #admin-chat-toggle:hover .ac-drag-tab { opacity: 1; transform: translateX(-50%) scale(1); }
+      #admin-chat-panel {
+        position: fixed; z-index: 99999;
+        width: 440px; height: 580px;
+        min-width: 320px; min-height: 400px;
+        background: #162542; border: 1px solid #253a5e;
+        border-radius: 16px; display: none; flex-direction: column;
+        box-shadow: 0 12px 48px rgba(0,0,0,0.5);
+        overflow: hidden; resize: both;
+      }
+      #admin-chat-panel.open { display: flex; }
+      .ac-header {
+        padding: 14px 20px; border-bottom: 1px solid #253a5e;
+        display: flex; align-items: center; justify-content: space-between;
+        cursor: grab; user-select: none;
+      }
+      .ac-header:active { cursor: grabbing; }
+      .ac-header h3 { font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 15px; color: #fff; font-weight: 600; margin: 0; }
+      .ac-header .ac-page { font-size: 12px; color: #666; margin-top: 2px; }
+      .ac-header-btns { display: flex; gap: 4px; }
+      .ac-header-btns button { background: none; border: none; color: #666; cursor: pointer; font-size: 16px; padding: 4px 6px; border-radius: 4px; }
+      .ac-header-btns button:hover { color: #fff; background: #253a5e; }
+      .ac-messages {
+        flex: 1; overflow-y: auto; padding: 16px 20px;
+        display: flex; flex-direction: column; gap: 12px;
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      }
+      .ac-msg { max-width: 88%; padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.5; word-wrap: break-word; }
+      .ac-msg.user { align-self: flex-end; background: #4c44d3; color: #0c0f1a; border-bottom-right-radius: 4px; }
+      .ac-msg.assistant { align-self: flex-start; background: #1e3358; color: #e0e0e0; border-bottom-left-radius: 4px; }
+      .ac-msg.assistant code { background: #162542; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+      .ac-msg.assistant pre { background: #162542; padding: 12px; border-radius: 8px; overflow-x: auto; margin: 8px 0; font-size: 13px; }
+      .ac-msg.assistant { position: relative; }
+      .ac-copy-btn {
+        position: absolute; top: 6px; right: 6px;
+        background: rgba(255,255,255,0.08); border: none; border-radius: 4px;
+        color: #888; font-size: 12px; padding: 3px 7px; cursor: pointer;
+        opacity: 0; transition: opacity 0.15s;
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      }
+      .ac-msg.assistant:hover .ac-copy-btn { opacity: 1; }
+      .ac-copy-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+      .ac-copy-btn.copied { color: #4ade80; }
+      .ac-msg.system { align-self: center; color: #888; font-size: 12px; font-style: italic; background: none; padding: 4px 8px; }
+      .ac-msg.action { align-self: flex-start; background: #1a2a1a; color: #4ade80; border-left: 3px solid #4ade80; font-size: 13px; border-radius: 8px; }
+      .ac-proposal {
+        align-self: stretch; background: #1a1a2a; border: 1px solid #3a3a5a; border-radius: 10px;
+        padding: 12px; font-size: 13px; margin: 4px 0;
+      }
+      .ac-proposal-header { color: #8888cc; font-weight: 600; margin-bottom: 8px; font-size: 12px; }
+      .ac-proposal-diff { background: #0f0f18; border-radius: 6px; padding: 10px; margin: 8px 0; overflow-x: auto; font-family: monospace; font-size: 12px; line-height: 1.6; }
+      .ac-diff-remove { color: #ff6b6b; }
+      .ac-diff-add { color: #4ade80; }
+      .ac-proposal-btns { display: flex; gap: 8px; margin-top: 10px; }
+      .ac-proposal-btns button {
+        padding: 6px 16px; border-radius: 6px; border: none; cursor: pointer;
+        font-size: 13px; font-weight: 600; transition: opacity 0.2s;
+      }
+      .ac-proposal-btns button:hover { opacity: 0.85; }
+      .ac-btn-apply { background: #4ade80; color: #0c0f1a; }
+      .ac-btn-preview { background: #5B8DEF; color: #fff; }
+      .ac-btn-reject { background: #253a5e; color: #999; }
+      .ac-btn-applied { background: #1a2a1a; color: #4ade80; cursor: default !important; }
+      .ac-btn-rejected { background: #2a1a1a; color: #ff6b6b; cursor: default !important; }
+      .ac-pr-badge {
+        display: inline-flex; align-items: center; gap: 4px;
+        background: #1a2a1a; color: #4ade80; font-size: 11px;
+        padding: 3px 8px; border-radius: 4px; margin-top: 6px;
+      }
+      .ac-pr-badge a { color: #5B8DEF; text-decoration: none; }
+      .ac-pr-badge a:hover { text-decoration: underline; }
+      .ac-pr-badge.pending { color: #4c44d3; background: #2a2a1a; }
+      .ac-pr-badge.failed { color: #ff6b6b; background: #2a1a1a; }
+      .ac-input-row {
+        padding: 12px 16px; border-top: 1px solid #253a5e;
+        display: flex; gap: 8px; align-items: flex-end;
+      }
+      .ac-input-row textarea {
+        flex: 1; background: #0c0f1a; border: 1px solid #253a5e; border-radius: 10px;
+        color: #fff; padding: 10px 14px; font-size: 14px; font-family: inherit;
+        resize: none; outline: none; min-height: 42px; max-height: 120px; line-height: 1.4;
+      }
+      .ac-input-row textarea:focus { border-color: #4c44d3; }
+      .ac-input-row button {
+        width: 42px; height: 42px; border-radius: 10px;
+        background: #4c44d3; border: none; cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0; transition: opacity 0.2s;
+      }
+      .ac-input-row button:disabled { opacity: 0.4; cursor: not-allowed; }
+      .ac-input-row button svg { width: 18px; height: 18px; fill: #0c0f1a; }
+      .ac-typing { display: none; align-self: flex-start; padding: 10px 14px; background: #1e3358; border-radius: 12px; border-bottom-left-radius: 4px; }
+      .ac-typing.show { display: block; }
+      .ac-typing span { display: inline-block; width: 8px; height: 8px; background: #666; border-radius: 50%; margin-right: 4px; animation: ac-bounce 1.4s infinite ease-in-out; }
+      .ac-typing span:nth-child(2) { animation-delay: 0.2s; }
+      .ac-typing span:nth-child(3) { animation-delay: 0.4s; margin-right: 0; }
+      @keyframes ac-bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
+      .ac-toolbar {
+        padding: 6px 16px; background: #0f1528; border-bottom: 1px solid #253a5e;
+        font-size: 12px; color: #888; display: flex; align-items: center; gap: 8px;
+      }
+      .ac-toolbar .dot { width: 6px; height: 6px; background: #4ade80; border-radius: 50%; flex-shrink: 0; }
+      .ac-toolbar .ac-path { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .ac-model-select {
+        background: #0c0f1a; border: 1px solid #253a5e; border-radius: 6px;
+        color: #ccc; font-size: 11px; padding: 3px 6px; outline: none; cursor: pointer; flex-shrink: 0;
+      }
+      .ac-model-select:focus { border-color: #4c44d3; }
+      /* Session bar */
+      .ac-sessions-bar {
+        padding: 6px 16px; background: #0f1528; border-bottom: 1px solid #253a5e;
+        display: flex; align-items: center; gap: 6px;
+      }
+      .ac-sessions-bar select {
+        flex: 1; background: #0c0f1a; border: 1px solid #253a5e; border-radius: 6px;
+        color: #ccc; font-size: 12px; padding: 4px 8px; outline: none; cursor: pointer;
+      }
+      .ac-sessions-bar select:focus { border-color: #4c44d3; }
+      .ac-sessions-bar button {
+        background: none; border: none; cursor: pointer; font-size: 13px; padding: 2px 4px;
+        opacity: 0.5; transition: opacity 0.2s;
+      }
+      .ac-sessions-bar button:hover { opacity: 1; }
+      /* Element selector mode */
+      .ac-select-btn {
+        background: none; border: 1px solid #253a5e; border-radius: 6px;
+        color: #888; font-size: 11px; padding: 3px 8px; cursor: pointer; flex-shrink: 0;
+        transition: all 0.2s;
+      }
+      .ac-select-btn:hover { color: #fff; border-color: #555; }
+      .ac-select-btn.active { color: #4c44d3; border-color: #4c44d3; background: rgba(76,68,211,0.1); }
+      .ac-element-overlay {
+        position: fixed; z-index: 99998; pointer-events: none;
+        border: 2px solid #4c44d3; border-radius: 4px;
+        background: rgba(76,68,211,0.08);
+        transition: all 0.1s ease;
+        display: none;
+      }
+      .ac-element-overlay.active { display: block; }
+      .ac-element-label {
+        position: fixed; z-index: 99998; pointer-events: none;
+        background: #4c44d3; color: #0c0f1a; font-size: 11px; font-weight: 600;
+        padding: 2px 8px; border-radius: 4px; font-family: monospace;
+        display: none; white-space: nowrap;
+      }
+      .ac-element-label.active { display: block; }
+      body.ac-selecting * { cursor: crosshair !important; }
+      .ac-selected-tag {
+        display: inline-flex; align-items: center; gap: 4px;
+        background: #253a5e; color: #4c44d3; font-size: 12px;
+        padding: 4px 10px; border-radius: 6px; margin: 4px 0;
+        font-family: monospace;
+      }
+      .ac-selected-tag .ac-remove { cursor: pointer; opacity: 0.6; }
+      .ac-selected-tag .ac-remove:hover { opacity: 1; }
+    `;
+    document.head.appendChild(style);
+
+    // Toggle button
+    const toggle = document.createElement('button');
+    toggle.id = 'admin-chat-toggle';
+    toggle.title = 'Site Admin Chat';
+    const iconImg = document.createElement('img');
+    iconImg.src = (location.pathname.split('/').length > 2 ? '../' : '') + 'assets/admin-bot-icon.png';
+    iconImg.alt = 'Site Assistant';
+    iconImg.style.cssText = 'width:36px;height:36px;pointer-events:none;';
+    toggle.appendChild(iconImg);
+    // Add drag tab to toggle
+    const dragTab = document.createElement('div');
+    dragTab.className = 'ac-drag-tab';
+    dragTab.innerHTML = '<svg viewBox="0 0 14 8" fill="none"><line x1="3" y1="2" x2="11" y2="2" stroke="#888" stroke-width="1.5" stroke-linecap="round"/><line x1="3" y1="6" x2="11" y2="6" stroke="#888" stroke-width="1.5" stroke-linecap="round"/></svg>';
+    toggle.appendChild(dragTab);
+    document.body.appendChild(toggle);
+
+    // --- Draggable toggle (only via drag tab) ---
+    let toggleDragging = false, toggleDragX, toggleDragY, toggleStartLeft, toggleStartTop, toggleMoved = false;
+    const savedToggle = JSON.parse(localStorage.getItem('ac-toggle-pos') || 'null');
+    if (savedToggle) {
+      toggle.style.bottom = 'auto';
+      toggle.style.right = 'auto';
+      toggle.style.top = savedToggle.top + 'px';
+      toggle.style.left = savedToggle.left + 'px';
+    }
+
+    dragTab.addEventListener('mousedown', (e) => {
+      toggleDragging = true;
+      toggleMoved = false;
+      toggleDragX = e.clientX;
+      toggleDragY = e.clientY;
+      const rect = toggle.getBoundingClientRect();
+      toggle.style.bottom = 'auto';
+      toggle.style.right = 'auto';
+      toggle.style.top = rect.top + 'px';
+      toggle.style.left = rect.left + 'px';
+      toggleStartLeft = rect.left;
+      toggleStartTop = rect.top;
+      document.body.style.userSelect = 'none';
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!toggleDragging) return;
+      const dx = e.clientX - toggleDragX;
+      const dy = e.clientY - toggleDragY;
+      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) toggleMoved = true;
+      toggle.style.left = Math.max(0, Math.min(toggleStartLeft + dx, window.innerWidth - 60)) + 'px';
+      toggle.style.top = Math.max(0, Math.min(toggleStartTop + dy, window.innerHeight - 60)) + 'px';
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (toggleDragging) {
+        toggleDragging = false;
+        document.body.style.userSelect = '';
+        const rect = toggle.getBoundingClientRect();
+        localStorage.setItem('ac-toggle-pos', JSON.stringify({ top: rect.top, left: rect.left }));
+      }
+    });
+
+    // Touch drag for toggle (via tab)
+    dragTab.addEventListener('touchstart', (e) => {
+      const touch = e.touches[0];
+      toggleDragging = true;
+      toggleMoved = false;
+      toggleDragX = touch.clientX;
+      toggleDragY = touch.clientY;
+      const rect = toggle.getBoundingClientRect();
+      toggle.style.bottom = 'auto';
+      toggle.style.right = 'auto';
+      toggle.style.top = rect.top + 'px';
+      toggle.style.left = rect.left + 'px';
+      toggleStartLeft = rect.left;
+      toggleStartTop = rect.top;
+    }, { passive: true });
+
+    document.addEventListener('touchmove', (e) => {
+      if (!toggleDragging) return;
+      const touch = e.touches[0];
+      if (Math.abs(touch.clientX - toggleDragX) > 3 || Math.abs(touch.clientY - toggleDragY) > 3) toggleMoved = true;
+      toggle.style.left = Math.max(0, toggleStartLeft + (touch.clientX - toggleDragX)) + 'px';
+      toggle.style.top = Math.max(0, toggleStartTop + (touch.clientY - toggleDragY)) + 'px';
+    }, { passive: true });
+
+    document.addEventListener('touchend', () => {
+      if (toggleDragging) {
+        toggleDragging = false;
+        const rect = toggle.getBoundingClientRect();
+        localStorage.setItem('ac-toggle-pos', JSON.stringify({ top: rect.top, left: rect.left }));
+      }
+    });
+
+    // Chat panel
+    const panel = document.createElement('div');
+    panel.id = 'admin-chat-panel';
+    // Position: restore from localStorage or default bottom-right
+    const saved = JSON.parse(localStorage.getItem('ac-pos') || 'null');
+    if (saved) {
+      panel.style.top = saved.top + 'px';
+      panel.style.left = saved.left + 'px';
+      if (saved.w) panel.style.width = saved.w + 'px';
+      if (saved.h) panel.style.height = saved.h + 'px';
+    } else {
+      panel.style.bottom = '96px';
+      panel.style.right = '24px';
+    }
+
+    panel.innerHTML = `
+      <div class="ac-header" id="ac-header">
+        <div>
+          <h3>🦞 Site Assistant</h3>
+          <div class="ac-page">${document.title}</div>
+        </div>
+        <div class="ac-header-btns">
+          <button id="ac-minimize" title="Minimize">─</button>
+          <button id="ac-close" title="Close">✕</button>
+        </div>
+      </div>
+      <div class="ac-toolbar">
+        <span class="dot"></span>
+        <span class="ac-path">${location.pathname || '/'}</span>
+        <button class="ac-select-btn" id="ac-select-btn" title="Select an element on the page">🎯 Select</button>
+        <select class="ac-model-select" id="ac-model">
+          <option value="anthropic/claude-sonnet-4.6">Sonnet 4.6</option>
+          <option value="anthropic/claude-opus-4.6">Opus 4.6</option>
+          <option value="openai/gpt-5.2-codex">GPT-5.2 Codex</option>
+          <option value="openai/gpt-5.2">GPT-5.2</option>
+        </select>
+      </div>
+      <div class="ac-sessions-bar" id="ac-sessions-bar">
+        <select id="ac-session-select"><option value="__new__">+ New Chat</option></select>
+        <button id="ac-delete-session" title="Delete this session">🗑</button>
+      </div>
+      <div class="ac-messages" id="ac-messages">
+        <div class="ac-msg system">I can see this page and read/edit source files. Ask me to change anything.</div>
+      </div>
+      <div class="ac-typing" id="ac-typing"><span></span><span></span><span></span></div>
+      <div class="ac-input-row">
+        <textarea id="ac-input" rows="1" placeholder="Ask about this page…"></textarea>
+        <button id="ac-send" title="Send"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+      </div>
+    `;
+    document.body.appendChild(panel);
+
+    // --- Draggable ---
+    const header = document.getElementById('ac-header');
+    let isDragging = false, dragX, dragY, startLeft, startTop;
+
+    header.addEventListener('mousedown', (e) => {
+      if (e.target.closest('button') || e.target.closest('select')) return;
+      isDragging = true;
+      dragX = e.clientX;
+      dragY = e.clientY;
+      // If using bottom/right positioning, convert to top/left
+      const rect = panel.getBoundingClientRect();
+      panel.style.bottom = 'auto';
+      panel.style.right = 'auto';
+      panel.style.top = rect.top + 'px';
+      panel.style.left = rect.left + 'px';
+      startLeft = rect.left;
+      startTop = rect.top;
+      document.body.style.userSelect = 'none';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const dx = e.clientX - dragX;
+      const dy = e.clientY - dragY;
+      let newLeft = startLeft + dx;
+      let newTop = startTop + dy;
+      // Clamp to viewport
+      newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - 100));
+      newTop = Math.max(0, Math.min(newTop, window.innerHeight - 60));
+      panel.style.left = newLeft + 'px';
+      panel.style.top = newTop + 'px';
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        document.body.style.userSelect = '';
+        // Save position
+        const rect = panel.getBoundingClientRect();
+        localStorage.setItem('ac-pos', JSON.stringify({
+          top: rect.top, left: rect.left,
+          w: rect.width, h: rect.height
+        }));
+      }
+    });
+
+    // Also save on resize
+    new ResizeObserver(() => {
+      if (panel.classList.contains('open')) {
+        const rect = panel.getBoundingClientRect();
+        localStorage.setItem('ac-pos', JSON.stringify({
+          top: rect.top, left: rect.left,
+          w: rect.width, h: rect.height
+        }));
+      }
+    }).observe(panel);
+
+    // Touch support for mobile dragging
+    header.addEventListener('touchstart', (e) => {
+      if (e.target.closest('button') || e.target.closest('select')) return;
+      const touch = e.touches[0];
+      isDragging = true;
+      dragX = touch.clientX;
+      dragY = touch.clientY;
+      const rect = panel.getBoundingClientRect();
+      panel.style.bottom = 'auto';
+      panel.style.right = 'auto';
+      panel.style.top = rect.top + 'px';
+      panel.style.left = rect.left + 'px';
+      startLeft = rect.left;
+      startTop = rect.top;
+    }, { passive: true });
+
+    document.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      const touch = e.touches[0];
+      const dx = touch.clientX - dragX;
+      const dy = touch.clientY - dragY;
+      panel.style.left = Math.max(0, startLeft + dx) + 'px';
+      panel.style.top = Math.max(0, startTop + dy) + 'px';
+    }, { passive: true });
+
+    document.addEventListener('touchend', () => {
+      if (isDragging) {
+        isDragging = false;
+        const rect = panel.getBoundingClientRect();
+        localStorage.setItem('ac-pos', JSON.stringify({
+          top: rect.top, left: rect.left, w: rect.width, h: rect.height
+        }));
+      }
+    });
+
+    // --- Element Selector ---
+    const overlay = document.createElement('div');
+    overlay.className = 'ac-element-overlay';
+    document.body.appendChild(overlay);
+    const elLabel = document.createElement('div');
+    elLabel.className = 'ac-element-label';
+    document.body.appendChild(elLabel);
+
+    let selectMode = false;
+    let selectedElement = null;
+    let hoveredElement = null;
+    const selectBtn = document.getElementById('ac-select-btn');
+
+    function getCssSelector(el) {
+      if (el.id) return '#' + el.id;
+      const parts = [];
+      while (el && el !== document.body) {
+        let sel = el.tagName.toLowerCase();
+        if (el.id) { parts.unshift('#' + el.id); break; }
+        if (el.className && typeof el.className === 'string') {
+          const cls = el.className.trim().split(/\s+/).filter(c => !c.startsWith('ac-')).slice(0, 2).join('.');
+          if (cls) sel += '.' + cls;
+        }
+        const parent = el.parentElement;
+        if (parent) {
+          const siblings = Array.from(parent.children).filter(c => c.tagName === el.tagName);
+          if (siblings.length > 1) sel += ':nth-child(' + (Array.from(parent.children).indexOf(el) + 1) + ')';
+        }
+        parts.unshift(sel);
+        el = parent;
+      }
+      return parts.join(' > ');
+    }
+
+    function getElementInfo(el) {
+      return {
+        tag: el.tagName.toLowerCase(),
+        id: el.id || null,
+        classes: el.className && typeof el.className === 'string' ? el.className.trim().split(/\s+/).filter(c => !c.startsWith('ac-')) : [],
+        text: el.textContent?.trim().slice(0, 100) || null,
+        href: el.href || null,
+        src: el.src || null,
+        name: el.name || null,
+        type: el.type || null,
+        placeholder: el.placeholder || null,
+        selector: getCssSelector(el),
+        parentTag: el.parentElement?.tagName?.toLowerCase() || null,
+        parentId: el.parentElement?.id || null,
+        parentClass: el.parentElement?.className?.trim?.()?.split?.(/\s+/)?.[0] || null,
+        nearestSection: el.closest('section')?.id || el.closest('[class*="section"]')?.className?.split?.(/\s+/)?.[0] || null,
+        isInForm: !!el.closest('form'),
+        formId: el.closest('form')?.id || null
+      };
+    }
+
+    function showOverlay(el) {
+      const rect = el.getBoundingClientRect();
+      overlay.style.top = rect.top + 'px';
+      overlay.style.left = rect.left + 'px';
+      overlay.style.width = rect.width + 'px';
+      overlay.style.height = rect.height + 'px';
+      overlay.classList.add('active');
+      // Label
+      const tag = el.tagName.toLowerCase();
+      const id = el.id ? '#' + el.id : '';
+      const cls = el.className && typeof el.className === 'string' ? '.' + el.className.trim().split(/\s+/).slice(0, 2).join('.') : '';
+      elLabel.textContent = tag + id + cls;
+      elLabel.style.top = Math.max(0, rect.top - 22) + 'px';
+      elLabel.style.left = rect.left + 'px';
+      elLabel.classList.add('active');
+    }
+
+    function hideOverlay() {
+      overlay.classList.remove('active');
+      elLabel.classList.remove('active');
+    }
+
+    function handleHover(e) {
+      if (!selectMode) return;
+      const el = e.target;
+      if (el.closest('#admin-chat-panel') || el.closest('#admin-chat-toggle') || el === overlay || el === elLabel) return;
+      hoveredElement = el;
+      showOverlay(el);
+    }
+
+    function handleSelect(e) {
+      if (!selectMode) return;
+      const el = e.target;
+      if (el.closest('#admin-chat-panel') || el.closest('#admin-chat-toggle')) return;
+      e.preventDefault();
+      e.stopPropagation();
+
+      selectedElement = getElementInfo(el);
+      selectMode = false;
+      selectBtn.classList.remove('active');
+      document.body.classList.remove('ac-selecting');
+      hideOverlay();
+
+      // Show selected element tag in chat
+      const tagDiv = document.createElement('div');
+      tagDiv.className = 'ac-selected-tag';
+      tagDiv.innerHTML = '🎯 ' + selectedElement.selector.slice(-60) + ' <span class="ac-remove" title="Clear selection">✕</span>';
+      tagDiv.querySelector('.ac-remove').addEventListener('click', () => {
+        selectedElement = null;
+        tagDiv.remove();
+      });
+      messagesEl.appendChild(tagDiv);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+
+      // Focus input
+      inputEl.focus();
+      inputEl.placeholder = 'What do you want to do with this element?';
+    }
+
+    selectBtn.addEventListener('click', () => {
+      selectMode = !selectMode;
+      selectBtn.classList.toggle('active', selectMode);
+      document.body.classList.toggle('ac-selecting', selectMode);
+      if (!selectMode) hideOverlay();
+    });
+
+    document.addEventListener('mousemove', handleHover);
+    document.addEventListener('click', handleSelect, true);
+
+    // ESC to cancel select mode
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && selectMode) {
+        selectMode = false;
+        selectBtn.classList.remove('active');
+        document.body.classList.remove('ac-selecting');
+        hideOverlay();
+      }
+    });
+
+    // State
+    let chatHistory = [];
+    let currentSessionId = null;
+    const messagesEl = document.getElementById('ac-messages');
+    const inputEl = document.getElementById('ac-input');
+    const sendBtn = document.getElementById('ac-send');
+    const typingEl = document.getElementById('ac-typing');
+    const sessionSelect = document.getElementById('ac-session-select');
+    const deleteBtn = document.getElementById('ac-delete-session');
+
+    // --- Session persistence (Supabase) ---
+    const sessionsApi = (method, body) => fetch('/api/sessions', {
+      method, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+      body: body ? JSON.stringify(body) : undefined
+    }).then(r => r.json()).catch(() => null);
+
+    function getSessionTitle(messages) {
+      const firstUser = messages.find(m => m.role === 'user');
+      if (!firstUser) return 'New Chat';
+      return firstUser.content.slice(0, 50) + (firstUser.content.length > 50 ? '…' : '');
+    }
+
+    async function saveCurrentSession() {
+      if (!chatHistory.length) return;
+      const body = {
+        id: currentSessionId,
+        title: getSessionTitle(chatHistory),
+        messages: chatHistory,
+        page_path: location.pathname,
+        model: document.getElementById('ac-model').value
+      };
+      const res = await sessionsApi('POST', body);
+      if (res?.id && !currentSessionId) {
+        currentSessionId = res.id;
+      }
+      await populateSessionSelect();
+    }
+
+    async function populateSessionSelect() {
+      const res = await sessionsApi('GET');
+      const sessions = res?.sessions || [];
+      sessionSelect.innerHTML = '<option value="__new__">+ New Chat</option>';
+      for (const s of sessions) {
+        const opt = document.createElement('option');
+        opt.value = s.id;
+        const age = Date.now() - new Date(s.updated_at).getTime();
+        const timeLabel = age < 3600000 ? Math.round(age/60000) + 'm ago'
+          : age < 86400000 ? Math.round(age/3600000) + 'h ago'
+          : Math.round(age/86400000) + 'd ago';
+        opt.textContent = (s.title || 'Untitled') + ' (' + timeLabel + ')';
+        if (s.id === currentSessionId) opt.selected = true;
+        sessionSelect.appendChild(opt);
+      }
+    }
+
+    async function loadSession(id) {
+      if (id === '__new__') {
+        currentSessionId = null;
+        chatHistory = [];
+        messagesEl.innerHTML = '<div class="ac-msg system">I can see this page and read/edit source files. Ask me to change anything.</div>';
+        inputEl.placeholder = 'Ask about this page…';
+        return;
+      }
+      const res = await sessionsApi('PUT', { id });
+      if (!res?.session) return;
+      currentSessionId = res.session.id;
+      chatHistory = res.session.messages || [];
+      if (res.session.model) document.getElementById('ac-model').value = res.session.model;
+      messagesEl.innerHTML = '';
+      for (const m of chatHistory) {
+        addMessage(m.role, m.content);
+      }
+    }
+
+    async function deleteSession(id) {
+      await sessionsApi('DELETE', { id });
+      currentSessionId = null;
+      chatHistory = [];
+      messagesEl.innerHTML = '<div class="ac-msg system">I can see this page and read/edit source files. Ask me to change anything.</div>';
+      await populateSessionSelect();
+      sessionSelect.value = '__new__';
+    }
+
+    // Init
+    currentSessionId = null;
+    populateSessionSelect();
+
+    sessionSelect.addEventListener('change', () => loadSession(sessionSelect.value));
+    deleteBtn.addEventListener('click', () => {
+      if (currentSessionId && confirm('Delete this chat session?')) {
+        deleteSession(currentSessionId);
+      }
+    });
+
+    toggle.addEventListener('click', () => {
+      if (toggleMoved) { toggleMoved = false; return; } // was a drag, not a click
+      panel.classList.toggle('open');
+      if (panel.classList.contains('open')) inputEl.focus();
+    });
+    document.getElementById('ac-close').addEventListener('click', () => panel.classList.remove('open'));
+    document.getElementById('ac-minimize').addEventListener('click', () => panel.classList.remove('open'));
+
+    inputEl.addEventListener('input', () => {
+      inputEl.style.height = 'auto';
+      inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + 'px';
+    });
+
+    inputEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    });
+    sendBtn.addEventListener('click', sendMessage);
+
+    function addMessage(role, text) {
+      const div = document.createElement('div');
+      div.className = 'ac-msg ' + role;
+      if (role === 'assistant') {
+        div.innerHTML = text
+          .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
+          .replace(/`([^`]+)`/g, '<code>$1</code>')
+          .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+          .replace(/\n/g, '<br>');
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'ac-copy-btn';
+        copyBtn.textContent = '📋';
+        copyBtn.title = 'Copy to clipboard';
+        copyBtn.addEventListener('click', () => {
+          navigator.clipboard.writeText(text).then(() => {
+            copyBtn.textContent = '✓';
+            copyBtn.classList.add('copied');
+            setTimeout(() => { copyBtn.textContent = '📋'; copyBtn.classList.remove('copied'); }, 1500);
+          });
+        });
+        div.appendChild(copyBtn);
+      } else {
+        div.textContent = text;
+      }
+      messagesEl.appendChild(div);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function getPageContext() {
+      const forms = Array.from(document.querySelectorAll('form')).map(f => ({
+        id: f.id || null,
+        action: f.action || null,
+        fields: Array.from(f.elements).filter(e => e.tagName !== 'BUTTON').map(e => ({
+          name: e.name || null, type: e.type || null, id: e.id || null,
+          placeholder: e.placeholder || null,
+          label: e.labels?.[0]?.textContent?.trim() || null
+        }))
+      }));
+
+      // Get visible text sections for better context
+      const sections = Array.from(document.querySelectorAll('section, .hero, .cta')).map(s => ({
+        id: s.id || null,
+        heading: s.querySelector('h1,h2,h3')?.textContent?.trim() || null
+      })).filter(s => s.heading);
+
+      return {
+        url: location.href,
+        path: location.pathname,
+        title: document.title,
+        h1: document.querySelector('h1')?.textContent?.trim() || null,
+        forms: forms.length ? forms : null,
+        sections: sections.length ? sections : null,
+        selectedElement: selectedElement || null,
+        metaDescription: document.querySelector('meta[name="description"]')?.content || null
+      };
+    }
+
+    function renderProposal(proposal) {
+      const div = document.createElement('div');
+      div.className = 'ac-proposal';
+
+      let diffHtml = '';
+      for (const patch of proposal.patches) {
+        const findLines = patch.find.split('\n').map(l => '<div class="ac-diff-remove">- ' + l.replace(/</g, '&lt;') + '</div>').join('');
+        const replaceLines = patch.replace.split('\n').map(l => '<div class="ac-diff-add">+ ' + l.replace(/</g, '&lt;') + '</div>').join('');
+        diffHtml += findLines + replaceLines;
+        if (proposal.patches.length > 1) diffHtml += '<div style="color:#555">---</div>';
+      }
+
+      div.innerHTML = `
+        <div class="ac-proposal-header">📝 ${proposal.message} — ${proposal.path}</div>
+        <div class="ac-proposal-diff">${diffHtml}</div>
+        ${proposal.errors ? '<div style="color:#ff6b6b;font-size:11px">⚠ ' + proposal.errors.join('; ') + '</div>' : ''}
+        <div class="ac-pr-badge pending" id="pr-status-${Date.now()}">⏳ Creating PR…</div>
+        <div class="ac-proposal-btns" style="display:none">
+          <button class="ac-btn-preview" data-action="preview">👁 Preview</button>
+          <button class="ac-btn-apply" data-action="approve">✓ Approve & Deploy</button>
+          <button class="ac-btn-reject" data-action="reject">✕ Reject</button>
+        </div>
+      `;
+
+      messagesEl.appendChild(div);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+
+      const btnsDiv = div.querySelector('.ac-proposal-btns');
+      const statusBadge = div.querySelector('.ac-pr-badge');
+
+      // Create PR immediately
+      (async () => {
+        try {
+          const res = await fetch('/api/apply', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+            body: JSON.stringify({
+              action: 'create-pr',
+              path: proposal.path,
+              patches: proposal.patches,
+              message: proposal.message
+            })
+          });
+          const data = await res.json();
+          if (!data.success) {
+            statusBadge.className = 'ac-pr-badge failed';
+            statusBadge.textContent = '❌ ' + (data.error || 'PR creation failed');
+            return;
+          }
+
+          const prNum = data.pr_number;
+          const prUrl = data.pr_url;
+          statusBadge.className = 'ac-pr-badge';
+          statusBadge.innerHTML = '🔀 <a href="' + prUrl + '" target="_blank">PR #' + prNum + '</a> — preview deploying…';
+          btnsDiv.style.display = 'flex';
+
+          // Poll for preview URL
+          let previewUrl = null;
+          let attempts = 0;
+          const pollPreview = async () => {
+            if (attempts++ > 20) {
+              statusBadge.innerHTML = '🔀 <a href="' + prUrl + '" target="_blank">PR #' + prNum + '</a> — <span style="color:#4c44d3">preview may take a moment</span>';
+              return;
+            }
+            try {
+              const pRes = await fetch('/api/apply', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+                body: JSON.stringify({ action: 'preview-status', pr_number: prNum })
+              });
+              const pData = await pRes.json();
+              if (pData.preview_url) {
+                previewUrl = pData.preview_url;
+                const pagePath = location.pathname === '/' ? '' : location.pathname;
+                statusBadge.innerHTML = '🔀 <a href="' + prUrl + '" target="_blank">PR #' + prNum + '</a> — ✅ preview ready';
+                btnsDiv.querySelector('[data-action="preview"]').onclick = () => {
+                  window.open(previewUrl + pagePath, '_blank');
+                };
+                return;
+              }
+            } catch (e) {}
+            setTimeout(pollPreview, 5000);
+          };
+
+          // Start polling after a delay (Vercel needs time)
+          setTimeout(pollPreview, 8000);
+
+          // Set up preview button with fallback URL immediately
+          const branchSlug = (data.branch || '').replace(/\//g, '-');
+          const fallbackUrl = 'https://empowerlo-website-git-' + branchSlug + '-mmcallister8.vercel.app';
+          btnsDiv.querySelector('[data-action="preview"]').addEventListener('click', () => {
+            const pagePath = location.pathname === '/' ? '' : location.pathname;
+            window.open((previewUrl || fallbackUrl) + pagePath, '_blank');
+          });
+
+          // Approve
+          btnsDiv.querySelector('[data-action="approve"]').addEventListener('click', async (e) => {
+            const btn = e.target;
+            btn.disabled = true;
+            btn.textContent = 'Merging…';
+            try {
+              const mRes = await fetch('/api/apply', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+                body: JSON.stringify({ action: 'approve', pr_number: prNum })
+              });
+              const mData = await mRes.json();
+              if (mData.success) {
+                btn.className = 'ac-btn-applied';
+                btn.textContent = '✓ Merged — deploying';
+                btnsDiv.querySelector('[data-action="reject"]').style.display = 'none';
+                btnsDiv.querySelector('[data-action="preview"]').style.display = 'none';
+                statusBadge.innerHTML = '🔀 <a href="' + prUrl + '" target="_blank">PR #' + prNum + '</a> — ✅ merged';
+                addMessage('action', '✓ ' + mData.message);
+              } else {
+                btn.textContent = '✓ Approve & Deploy';
+                btn.disabled = false;
+                addMessage('system', 'Error: ' + (mData.error || 'Merge failed'));
+              }
+            } catch (err) {
+              btn.textContent = '✓ Approve & Deploy';
+              btn.disabled = false;
+              addMessage('system', 'Error: ' + err.message);
+            }
+          });
+
+          // Reject
+          btnsDiv.querySelector('[data-action="reject"]').addEventListener('click', async (e) => {
+            const btn = e.target;
+            btn.disabled = true;
+            btn.textContent = 'Closing…';
+            try {
+              await fetch('/api/apply', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+                body: JSON.stringify({ action: 'reject', pr_number: prNum })
+              });
+              btn.className = 'ac-btn-rejected';
+              btn.textContent = '✕ Rejected';
+              btnsDiv.querySelector('[data-action="approve"]').style.display = 'none';
+              btnsDiv.querySelector('[data-action="preview"]').style.display = 'none';
+              statusBadge.innerHTML = '🔀 <a href="' + prUrl + '" target="_blank">PR #' + prNum + '</a> — closed';
+              statusBadge.className = 'ac-pr-badge failed';
+              addMessage('system', 'PR #' + prNum + ' closed.');
+            } catch (err) {
+              btn.textContent = '✕ Reject';
+              btn.disabled = false;
+            }
+          });
+
+        } catch (err) {
+          statusBadge.className = 'ac-pr-badge failed';
+          statusBadge.textContent = '❌ Error: ' + err.message;
+        }
+      })();
+    }
+
+    async function sendMessage() {
+      const text = inputEl.value.trim();
+      if (!text) return;
+
+      inputEl.value = '';
+      inputEl.style.height = 'auto';
+      addMessage('user', text);
+      sendBtn.disabled = true;
+      typingEl.classList.add('show');
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+
+      chatHistory.push({ role: 'user', content: text });
+
+      try {
+        const selectedModel = document.getElementById('ac-model').value;
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + session.access_token
+          },
+          body: JSON.stringify({
+            messages: chatHistory,
+            pageContext: getPageContext(),
+            model: selectedModel
+          })
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error || 'API error: ' + res.status);
+        }
+
+        const data = await res.json();
+        const reply = data.reply || 'Sorry, something went wrong.';
+
+        chatHistory.push({ role: 'assistant', content: reply });
+        addMessage('assistant', reply);
+
+        if (data.actions && data.actions.length) {
+          for (const a of data.actions) {
+            addMessage('action', '✓ ' + a);
+          }
+        }
+
+        // Render proposals with Apply/Reject
+        if (data.proposals && data.proposals.length) {
+          for (const p of data.proposals) {
+            renderProposal(p);
+          }
+        }
+
+        // Auto-save session
+        saveCurrentSession();
+      } catch (err) {
+        addMessage('system', 'Error: ' + err.message);
+      } finally {
+        sendBtn.disabled = false;
+        typingEl.classList.remove('show');
+      }
+    }
+  }
+})();
+</script>
+
 </body>
 </html>
