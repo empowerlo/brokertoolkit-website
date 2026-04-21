@@ -670,7 +670,7 @@
 (function(){
   // ================================================================
   // AIME Partner Signup — Stripe Elements two-step flow
-  // Step 1: POST /api/partner-signup/create-intent → { clientSecret }
+  // Step 1: POST /api/partner-signup/create-payment-intent → { clientSecret }
   // Step 2: stripe.confirmCardPayment(clientSecret)
   // Step 3: POST /api/partner-signup/finalize → { redirectUrl }
   // TODO: Swap STRIPE_PK placeholder with real publishable key from Toolkit Bot
@@ -754,6 +754,7 @@
       lastName: String(fd.get('lastName') || '').trim(),
       companyName: String(fd.get('companyName') || '').trim(),
       offer: 'aim-7day',
+      partnerId: 'aime',
       ...attribution
     };
 
@@ -777,7 +778,7 @@
 
     try {
       // ── Step 1: Create Payment Intent ($7) ──────────────────
-      const intentRes = await fetch('/api/partner-signup/create-intent', {
+      const intentRes = await fetch('/api/partner-signup/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
