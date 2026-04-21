@@ -38,7 +38,7 @@
       left: 0;
       right: 0;
       z-index: 101;
-      background: linear-gradient(90deg, #4c44d3 0%, #6e5ce7 100%);
+      background: #152542;
       border-bottom: none;
       padding: 0.6rem 1rem;
       text-align: center;
@@ -53,17 +53,18 @@
     /* Nav sits below the 40px announcement bar, starts transparent */
     nav {
       top: 40px;
-      background: #152542;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: transparent;
+      border-bottom: 1px solid transparent;
     }
-    /* On scroll: keep same solid navy */
+    /* On scroll: fill with dark glass — same as global nav-scrolled */
     nav.nav-scrolled {
-      background: #152542;
-      backdrop-filter: none;
-      -webkit-backdrop-filter: none;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(11, 15, 30, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(110, 92, 231, 0.2);
     }
     /* Body offset: 40px bar + 64px nav */
+    /* Body bg matches hero so the transparent nav blends seamlessly */
     body { padding-top: 104px; background: #0b0f1e; }
 
     /* Nav BT logo: full stacked logo-white.png (icon + 'Broker Toolkit' text as one asset) */
@@ -78,11 +79,11 @@
       width: 44px;
     }
 
-    /* Nav CTA — transparent outline on navy banner */
+    /* Nav CTA — flat, no shadow, consistent 8px radius */
     .cta-nav {
-      background: transparent;
+      background: linear-gradient(135deg, #4c44d3, #6e5ce7);
       color: #fff;
-      border: 1.5px solid rgba(255,255,255,0.6);
+      border: none;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -92,9 +93,9 @@
       padding: 0.6rem 1.25rem;
       border-radius: 8px;
       box-shadow: none;
-      transition: background 0.15s, border-color 0.15s;
+      transition: opacity 0.15s;
     }
-    .cta-nav:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+    .cta-nav:hover { opacity: 0.85; }
 
     /* ===== PARTNERSHIP HERO ===== */
     .aim-hero {
