@@ -308,45 +308,85 @@
       background: #0b1220;
       padding: 5rem 1rem;
     }
-    .feature-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    .feature-cards {
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
       gap: 2rem;
-      max-width: 920px;
-      margin: 0 auto 2rem;
+    }
+    .feature-card-full {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(110, 92, 231, 0.2);
+      border-radius: 16px;
+      padding: 2rem 2rem 1.75rem;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.5rem;
       align-items: start;
     }
     @media (max-width: 640px) {
-      .feature-row { grid-template-columns: 1fr; }
+      .feature-card-full { grid-template-columns: 1fr; }
+      .feature-card-full .fcf-icon { display: none; }
     }
-    .feature-item {
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
-    }
-    .feature-item .fi-icon {
-      width: 40px;
-      height: 40px;
-      background: rgba(110, 92, 231, 0.12);
-      border: 1px solid rgba(110, 92, 231, 0.25);
-      border-radius: 10px;
+    .fcf-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(110, 92, 231, 0.15);
+      border: 1px solid rgba(110, 92, 231, 0.3);
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      color: #8b5cf6;
+      color: #a78bfa;
+      margin-top: 0.2rem;
     }
-    .feature-item h4 {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #e2e8f0;
-      margin: 0 0 0.35rem;
+    .fcf-body h3 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #f1f5f9;
+      margin: 0 0 0.3rem;
     }
-    .feature-item p {
-      font-size: 0.88rem;
-      color: #64748b;
+    .fcf-body .fcf-tagline {
+      font-size: 0.9rem;
+      color: #a78bfa;
+      font-weight: 600;
+      margin: 0 0 0.85rem;
+    }
+    .fcf-body p {
+      font-size: 0.92rem;
+      color: #94a3b8;
+      line-height: 1.65;
+      margin: 0 0 1rem;
+    }
+    .fcf-bullets {
+      list-style: none;
+      padding: 0;
       margin: 0;
-      line-height: 1.6;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.45rem 1.5rem;
+    }
+    @media (max-width: 560px) {
+      .fcf-bullets { grid-template-columns: 1fr; }
+    }
+    .fcf-bullets li {
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      line-height: 1.4;
+    }
+    .fcf-bullets li::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #6e5ce7;
+      flex-shrink: 0;
+      margin-top: 0.4rem;
     }
 
     /* ===== CTA SECTION ===== */
@@ -560,46 +600,88 @@
       <p class="section-sub">Every tool is built around the specific problems independent mortgage brokers deal with every day.</p>
     </div>
 
-    <div class="feature-row">
-      <div class="feature-item">
-        <div class="fi-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6z"/></svg>
-        </div>
-        <div>
-          <h4>Newsletter Pro</h4>
-          <p>AI-generated, hyper-local newsletters for prospects, past clients, and referral partners. Pick your audience, pick your market. Content goes out on schedule. Sends directly from HighLevel or standalone.</p>
-        </div>
-      </div>
-      <div class="feature-item">
-        <div class="fi-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
-        </div>
-        <div>
-          <h4>Activity Tracker</h4>
-          <p>Track daily calls, talk-tos, appointments, and social engagement against real production goals. The habits that separate top producers aren't secret. They're just not tracked. Now they are.</p>
-        </div>
-      </div>
-    </div>
+    <div class="feature-cards">
 
-    <div class="feature-row">
-      <div class="feature-item">
-        <div class="fi-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <!-- Newsletter Pro -->
+      <div class="feature-card-full">
+        <div class="fcf-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6z"/></svg>
         </div>
-        <div>
-          <h4>Rate Monitor</h4>
-          <p>Live Conventional, FHA, and VA rates across all 50 states with daily trend tracking. Know exactly where rates stand in your market, without bouncing between three different websites every morning.</p>
+        <div class="fcf-body">
+          <h3>Newsletter Pro</h3>
+          <p class="fcf-tagline">AI-Powered Newsletters That Actually Get Sent</p>
+          <p>Stop staring at blank email drafts. Newsletter Pro uses AI to generate hyper-local, audience-specific content for your prospects, past clients, and referral partners. Pick your market, pick your audience, set the schedule. It runs itself.</p>
+          <ul class="fcf-bullets">
+            <li>Choose your audience: prospects, past clients, or referral partners</li>
+            <li>Target by market (Treasure Valley, Tampa Bay, wherever you work)</li>
+            <li>Segment by buyer type: first-time, veteran, investor, jumbo, and more</li>
+            <li>Publish directly through HighLevel or export to any platform</li>
+            <li>Set up recurring newsletters on autopilot</li>
+            <li>Hyper-local content keeps you relevant in your specific market</li>
+          </ul>
         </div>
       </div>
-      <div class="feature-item">
-        <div class="fi-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+
+      <!-- Activity Tracker -->
+      <div class="feature-card-full">
+        <div class="fcf-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
         </div>
-        <div>
-          <h4>Loan Advisor</h4>
-          <p>Side-by-side loan comparisons, refinance break-even analysis, and cash-out calculators. Professional-grade analysis tools you can share directly with borrowers. No spreadsheet required.</p>
+        <div class="fcf-body">
+          <h3>Activity Tracker</h3>
+          <p class="fcf-tagline">The Daily Disciplines That Drive Production</p>
+          <p>Top producers don't leave their activity to chance. Track the daily inputs that lead to closings: calls, talk-tos, appointments, leads, apps, and social engagement. The habits that separate top producers aren't secret. They're just not tracked. Now they are.</p>
+          <ul class="fcf-bullets">
+            <li>Quick-log widgets for fast daily entry (under 60 seconds)</li>
+            <li>Set weekly and monthly goals for each metric</li>
+            <li>Visual progress bars show exactly where you stand</li>
+            <li>Activity history with daily and weekly breakdowns</li>
+            <li>Track calls, talk-tos, appointments, leads, apps, and social</li>
+            <li>Stay accountable without a spreadsheet or separate CRM module</li>
+          </ul>
         </div>
       </div>
+
+      <!-- Rate Monitor -->
+      <div class="feature-card-full">
+        <div class="fcf-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="fcf-body">
+          <h3>Rate Monitor</h3>
+          <p class="fcf-tagline">50-State Rates at a Glance</p>
+          <p>No more checking three different sites for today's rates. Rate Monitor gives you live rates across all 50 states for 30Y Fixed, 15Y Fixed, FHA, and VA with daily change tracking. Know where rates stand in your market before your next client call.</p>
+          <ul class="fcf-bullets">
+            <li>Monitor rates for any states you're licensed in</li>
+            <li>30Y Fixed, 15Y Fixed, FHA, and VA all in one view</li>
+            <li>Trend arrows show daily rate movements at a glance</li>
+            <li>Rate alerts when significant changes happen</li>
+            <li>Averages across your monitored states</li>
+            <li>Always know where rates stand before your next call</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Loan Advisor -->
+      <div class="feature-card-full">
+        <div class="fcf-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="fcf-body">
+          <h3>Loan Advisor</h3>
+          <p class="fcf-tagline">Professional Loan Analysis Tools</p>
+          <p>Compare loan options side by side, run refinance break-even analysis, and show cash-out benefit scenarios. Give borrowers a clear, professional analysis instead of a wall of numbers. Save and share directly with your clients.</p>
+          <ul class="fcf-bullets">
+            <li>Compare up to 4 loan options side by side</li>
+            <li>Refinance analysis with break-even charts</li>
+            <li>Cash-out benefit calculator for debt consolidation scenarios</li>
+            <li>Save scenarios and share with borrowers</li>
+            <li>Professional presentation your clients can actually understand</li>
+            <li>Embeddable tools for your website (coming soon)</li>
+          </ul>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
