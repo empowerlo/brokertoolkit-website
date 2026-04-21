@@ -30,33 +30,43 @@
 
   <style>
     /* ===== AIM PARTNERSHIP BANNER ===== */
-    .aim-partner-bar {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      padding: 0.75rem 1rem;
-      text-align: center;
-      font-size: 0.82rem;
-      color: #cbd5e1;
-      letter-spacing: 0.02em;
-    }
-    .aim-partner-bar strong { color: #f1f5f9; }
-
-    /* ===== NAV OVERRIDE ===== */
-    /* Stack the announcement bar + nav as fixed chrome at the top */
+    /* ===== ANNOUNCEMENT BAR ===== */
+    /* Lighter brand blue — visible, not buried in dark navy */
     .aim-partner-bar {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      z-index: 101; /* above nav's z-index: 100 */
+      z-index: 101;
+      background: linear-gradient(90deg, #4c44d3 0%, #6e5ce7 100%);
+      border-bottom: none;
+      padding: 0.6rem 1rem;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.92);
+      letter-spacing: 0.02em;
     }
-    nav {
-      top: 44px; /* push nav below the announcement bar (~44px tall) */
-    }
-    /* Offset page body so hero content starts below both bars */
-    body { padding-top: 108px; } /* 44px bar + 64px nav */
+    .aim-partner-bar strong { color: #fff; font-weight: 700; }
 
-    /* Nav BT logo: use the full stacked logo-white.png (icon + text as one image) */
+    /* ===== NAV OVERRIDE ===== */
+    /* Nav sits below the 40px announcement bar, starts transparent */
+    nav {
+      top: 40px;
+      background: transparent;
+      border-bottom: 1px solid transparent;
+    }
+    /* On scroll: fill with dark glass — same as global nav-scrolled */
+    nav.nav-scrolled {
+      background: rgba(11, 15, 30, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(110, 92, 231, 0.2);
+    }
+    /* Body offset: 40px bar + 64px nav */
+    body { padding-top: 104px; }
+
+    /* Nav BT logo: full stacked logo-white.png (icon + 'Broker Toolkit' text as one asset) */
     nav .logo-icon { display: none; }
     .aim-nav-logo-stack {
       display: flex;
@@ -64,11 +74,11 @@
       text-decoration: none;
     }
     .aim-nav-logo-stack img {
-      height: 48px;
-      width: 48px;
+      height: 44px;
+      width: 44px;
     }
 
-    /* Nav CTA — clean flat style, consistent radius with page buttons */
+    /* Nav CTA — flat, no shadow, consistent 8px radius */
     .cta-nav {
       background: linear-gradient(135deg, #4c44d3, #6e5ce7);
       color: #fff;
@@ -77,14 +87,14 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 700;
-      padding: 0.65rem 1.35rem;
+      padding: 0.6rem 1.25rem;
       border-radius: 8px;
       box-shadow: none;
       transition: opacity 0.15s;
     }
-    .cta-nav:hover { opacity: 0.88; }
+    .cta-nav:hover { opacity: 0.85; }
 
     /* ===== PARTNERSHIP HERO ===== */
     .aim-hero {
