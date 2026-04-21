@@ -42,8 +42,42 @@
     .aim-partner-bar strong { color: #f1f5f9; }
 
     /* ===== NAV OVERRIDE ===== */
-    /* Constrain the square logo icon to fit cleanly in the 64px nav */
-    nav .logo-icon { width: 36px; height: 36px; }
+    /* Stack the announcement bar + nav as fixed chrome at the top */
+    .aim-partner-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 101; /* above nav's z-index: 100 */
+    }
+    nav {
+      top: 44px; /* push nav below the announcement bar (~44px tall) */
+    }
+    /* Offset page body so hero content starts below both bars */
+    body { padding-top: 108px; } /* 44px bar + 64px nav */
+
+    /* Nav BT logo: icon stacked with wordmark underneath */
+    nav .logo-icon { display: none; }
+    .aim-nav-logo-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      text-decoration: none;
+    }
+    .aim-nav-logo-stack img {
+      width: 32px;
+      height: 32px;
+    }
+    .aim-nav-logo-stack span {
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
     /* Nav CTA — clean flat style, consistent radius with page buttons */
     .cta-nav {
       background: linear-gradient(135deg, #4c44d3, #6e5ce7);
@@ -77,25 +111,29 @@
       flex-wrap: wrap;
     }
     .aim-logos .logo-aime img {
-      /* Wide aspect ratio (1063x288). At 36px height = ~132px wide */
-      height: 36px;
+      /* Wide aspect ratio (1063x288). Constrained so visual block height ~matches the stacked BT logo */
+      height: 52px;
       width: auto;
+      max-width: 190px;
     }
     .aim-logos .logo-bt {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.3rem;
     }
     .aim-logos .logo-bt img {
-      height: 36px;
-      width: 36px;
+      height: 52px;
+      width: 52px;
     }
     .logo-bt-name {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: #f1f5f9;
-      letter-spacing: -0.02em;
-      white-space: nowrap;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-align: center;
+      line-height: 1.2;
     }
     .aim-logos-divider {
       color: #475569;
@@ -253,20 +291,23 @@
     }
     .partner-card .partner-logos .logo-bt-partner {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.25rem;
       opacity: 0.85;
     }
     .partner-card .partner-logos .logo-bt-partner img {
-      height: 28px;
-      width: 28px;
+      height: 36px;
+      width: 36px;
     }
     .partner-card .partner-logos .logo-bt-partner span {
-      font-size: 0.95rem;
-      font-weight: 800;
-      color: #e2e8f0;
-      letter-spacing: -0.02em;
-      white-space: nowrap;
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-align: center;
+      line-height: 1.2;
     }
     .partner-card .partner-logos .divider {
       color: #475569;
@@ -444,8 +485,9 @@
 <!-- NAV (minimal — no distractions on this page) -->
 <nav>
   <div class="nav-inner">
-    <a href="/" class="logo" aria-label="Broker Toolkit home">
-      <img class="logo-icon" src="assets/logo-white-icon.png" alt="Broker Toolkit">
+    <a href="/" class="aim-nav-logo-stack" aria-label="Broker Toolkit home">
+      <img src="assets/logo-white-icon.png" alt="Broker Toolkit">
+      <span>Broker Toolkit</span>
     </a>
     <div class="nav-links">
       <button type="button" class="cta-nav js-open-signup">Get Started for $7</button>
@@ -465,7 +507,7 @@
       <div class="aim-logos-divider">×</div>
       <div class="logo-bt">
         <img src="assets/logo-white-icon.png" alt="Broker Toolkit">
-        <span class="logo-bt-name">Broker Toolkit</span>
+        <span class="logo-bt-name">Broker<br>Toolkit</span>
       </div>
     </div>
 
@@ -520,7 +562,7 @@
       <div class="partner-logos">
         <div class="logo-aime-partner"><img src="assets/aime-logo-white.png" alt="AIME"></div>
         <span class="divider">×</span>
-        <div class="logo-bt-partner"><img src="assets/logo-white-icon.png" alt="Broker Toolkit"><span>Broker Toolkit</span></div>
+        <div class="logo-bt-partner"><img src="assets/logo-white-icon.png" alt="Broker Toolkit"><span>Broker<br>Toolkit</span></div>
       </div>
       <p>AIME exists to help independent mortgage brokers compete and win. We built Broker Toolkit for the same reason: to give working loan officers practical tools that save time and drive funded production, without agency overhead or enterprise price tags.</p>
       <p style="margin-top: 0.85rem;">This partnership puts a powerful production platform in the hands of AIME members at a price that makes saying yes easy. The tools work. The integration is real. And the team behind it has been building mortgage technology since 2018.</p>
