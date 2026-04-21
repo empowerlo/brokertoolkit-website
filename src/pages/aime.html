@@ -44,6 +44,23 @@
     /* ===== NAV OVERRIDE ===== */
     /* Constrain the square logo icon to fit cleanly in the 64px nav */
     nav .logo-icon { width: 36px; height: 36px; }
+    /* Nav CTA — clean flat style, consistent radius with page buttons */
+    .cta-nav {
+      background: linear-gradient(135deg, #4c44d3, #6e5ce7);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 0.65rem 1.35rem;
+      border-radius: 8px;
+      box-shadow: none;
+      transition: opacity 0.15s;
+    }
+    .cta-nav:hover { opacity: 0.88; }
 
     /* ===== PARTNERSHIP HERO ===== */
     .aim-hero {
@@ -56,7 +73,7 @@
       align-items: center;
       justify-content: center;
       gap: 1.5rem;
-      margin-bottom: 2.5rem;
+      margin-bottom: 3rem;
       flex-wrap: wrap;
     }
     .aim-logos .logo-aime img {
@@ -88,15 +105,15 @@
     }
     .aim-hero-badge {
       display: inline-block;
-      background: rgba(110, 92, 231, 0.15);
-      border: 1px solid rgba(110, 92, 231, 0.4);
-      color: #a78bfa;
+      background: rgba(110, 92, 231, 0.25);
+      border: 1px solid rgba(139, 92, 246, 0.6);
+      color: #c4b5fd;
       font-size: 0.78rem;
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       padding: 0.35rem 0.9rem;
-      border-radius: 20px;
+      border-radius: 8px;
       margin-bottom: 1.5rem;
     }
     .aim-hero h1 {
@@ -119,7 +136,7 @@
       font-size: 1.15rem;
       color: #94a3b8;
       max-width: 600px;
-      margin: 0 auto 2.5rem;
+      margin: 0 auto 3rem;
       line-height: 1.65;
     }
     .aim-offer-box {
@@ -162,6 +179,9 @@
       font-size: 0.82rem;
       color: #64748b;
       margin-top: 0.25rem;
+    }
+    .aim-hero-cta {
+      margin-top: 0.5rem;
     }
     .aim-hero-cta .btn {
       min-width: 260px;
@@ -226,14 +246,31 @@
       margin-bottom: 1.5rem;
       flex-wrap: wrap;
     }
-    .partner-card .partner-logos img {
-      height: 36px;
+    .partner-card .partner-logos .logo-aime-partner img {
+      height: 28px;
       width: auto;
       opacity: 0.85;
     }
+    .partner-card .partner-logos .logo-bt-partner {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      opacity: 0.85;
+    }
+    .partner-card .partner-logos .logo-bt-partner img {
+      height: 28px;
+      width: 28px;
+    }
+    .partner-card .partner-logos .logo-bt-partner span {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #e2e8f0;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
     .partner-card .partner-logos .divider {
-      color: #334155;
-      font-size: 1.2rem;
+      color: #475569;
+      font-size: 1.1rem;
     }
     .partner-card p {
       color: #94a3b8;
@@ -411,7 +448,7 @@
       <img class="logo-icon" src="assets/logo-white-icon.png" alt="Broker Toolkit">
     </a>
     <div class="nav-links">
-      <button type="button" class="cta-nav js-open-signup" style="background: linear-gradient(135deg,#4c44d3,#6e5ce7); color:#fff; border: none; cursor: pointer; display:inline-flex; align-items:center; justify-content:center; font-size:1rem; font-weight:700; padding:.72rem 1.4rem; border-radius:10px; box-shadow:0 4px 14px rgba(76,68,211,.4);">Get Started for $7</button>
+      <button type="button" class="cta-nav js-open-signup">Get Started for $7</button>
     </div>
   </div>
 </nav>
@@ -481,9 +518,9 @@
     </div>
     <div class="partner-card">
       <div class="partner-logos">
-        <img src="assets/aime-logo-white.png" alt="AIME">
+        <div class="logo-aime-partner"><img src="assets/aime-logo-white.png" alt="AIME"></div>
         <span class="divider">×</span>
-        <img src="assets/logo.png" alt="Broker Toolkit">
+        <div class="logo-bt-partner"><img src="assets/logo-white-icon.png" alt="Broker Toolkit"><span>Broker Toolkit</span></div>
       </div>
       <p>AIME exists to help independent mortgage brokers compete and win. We built Broker Toolkit for the same reason: to give working loan officers practical tools that save time and drive funded production, without agency overhead or enterprise price tags.</p>
       <p style="margin-top: 0.85rem;">This partnership puts a powerful production platform in the hands of AIME members at a price that makes saying yes easy. The tools work. The integration is real. And the team behind it has been building mortgage technology since 2018.</p>
