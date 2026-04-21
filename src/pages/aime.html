@@ -670,12 +670,11 @@
 (function(){
   // ================================================================
   // AIME Partner Signup — Stripe Elements two-step flow
-  // Step 1: POST /api/partner-signup/create-intent → { clientSecret }
+  // Step 1: POST /api/partner-signup/create-payment-intent → { clientSecret }
   // Step 2: stripe.confirmCardPayment(clientSecret)
-  // Step 3: POST /api/partner-signup/finalize → { redirectUrl }
-  // TODO: Swap STRIPE_PK placeholder with real publishable key from Toolkit Bot
+  // Step 3: POST /api/partner-signup/finalize → { redirectUrl: '/welcome' }
+  // Stripe PK fetched dynamically from GET /api/partner-signup/stripe-config
   // ================================================================
-  const STRIPE_PK = 'REPLACE_WITH_STRIPE_PUBLISHABLE_KEY';
 
   const modal = document.getElementById('signupModal');
   const form = document.getElementById('aim-signup-form');
@@ -685,27 +684,42 @@
   const cardErrorsEl = document.getElementById('card-errors');
   const openButtons = Array.from(document.querySelectorAll('.js-open-signup'));
 
-  // Stripe instance — initialized once on first modal open
+  // Stripe instance — initialized async on first modal open (PK from config endpoint)
   let stripe = null;
   let cardElement = null;
   let stripeReady = false;
+  let stripeInitPromise = null;
 
-  function initStripe() {
-    if (stripeReady || STRIPE_PK === 'REPLACE_WITH_STRIPE_PUBLISHABLE_KEY') return;
-    if (typeof Stripe === 'undefined') { console.warn('Stripe.js not loaded'); return; }
-    stripe = Stripe(STRIPE_PK);
-    const elements = stripe.elements({
-      fonts: [{ cssSrc: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap' }]
-    });
-    cardElement = elements.create('card', {
-      style: {
-        base: { fontFamily: 'Inter, sans-serif', fontSize: '15px', color: '#e2e8f0', '::placeholder': { color: '#475569' } },
-        invalid: { color: '#f87171' }
+  async function initStripe() {
+    if (stripeReady) return;
+    if (stripeInitPromise) return stripeInitPromise;
+    stripeInitPromise = (async () => {
+      if (typeof Stripe === 'undefined') { console.warn('Stripe.js not loaded'); return; }
+      let publishableKey;
+      try {
+        const cfgRes = await fetch('/api/partner-signup/stripe-config');
+        const cfg = await cfgRes.json();
+        publishableKey = cfg.publishableKey;
+      } catch (e) {
+        console.error('Failed to load Stripe config:', e);
+        return;
       }
-    });
-    cardElement.mount('#card-element');
-    cardElement.on('change', (e) => { cardErrorsEl.textContent = e.error ? e.error.message : ''; });
-    stripeReady = true;
+      if (!publishableKey) { console.error('No publishableKey in stripe-config response'); return; }
+      stripe = Stripe(publishableKey);
+      const elements = stripe.elements({
+        fonts: [{ cssSrc: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap' }]
+      });
+      cardElement = elements.create('card', {
+        style: {
+          base: { fontFamily: 'Inter, sans-serif', fontSize: '15px', color: '#e2e8f0', '::placeholder': { color: '#475569' } },
+          invalid: { color: '#f87171' }
+        }
+      });
+      cardElement.mount('#card-element');
+      cardElement.on('change', (e) => { cardErrorsEl.textContent = e.error ? e.error.message : ''; });
+      stripeReady = true;
+    })();
+    return stripeInitPromise;
   }
 
   // UTM passthrough
@@ -731,7 +745,7 @@
   function openModal() {
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
-    setTimeout(() => { initStripe(); document.getElementById('firstName')?.focus(); }, 50);
+    setTimeout(() => { initStripe().catch(console.error); document.getElementById('firstName')?.focus(); }, 50);
     track('aim_signup_modal_open');
   }
 
@@ -754,6 +768,7 @@
       lastName: String(fd.get('lastName') || '').trim(),
       companyName: String(fd.get('companyName') || '').trim(),
       offer: 'aim-7day',
+      partnerId: 'aime',
       ...attribution
     };
 
@@ -777,7 +792,7 @@
 
     try {
       // ── Step 1: Create Payment Intent ($7) ──────────────────
-      const intentRes = await fetch('/api/partner-signup/create-intent', {
+      const intentRes = await fetch('/api/partner-signup/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
