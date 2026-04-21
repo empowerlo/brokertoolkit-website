@@ -8,6 +8,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.98.0",
     "clean-css": "^5.3.3",
+    "stripe": "^22.0.2",
     "terser": "^5.37.0"
   }
 }
