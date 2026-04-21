@@ -22,6 +22,8 @@
   <meta name="twitter:image" content="https://brokertoolkit.app/assets/logo.png">
   <!-- noindex: partner-specific offer page -->
   <meta name="robots" content="noindex, nofollow">
+  <!-- Stripe.js -->
+  <script src="https://js.stripe.com/v3/" async></script>
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"></noscript>
   <link rel="stylesheet" href="styles.css">
@@ -642,13 +644,11 @@
         <input id="companyName" name="companyName" type="text" autocomplete="organization" placeholder="Your firm name">
       </div>
 
-      <!-- Payment section — placeholder for Stripe integration -->
-      <!-- TODO: Replace this section with Stripe Payment Element or redirect to Stripe Checkout URL from Toolkit Bot -->
-      <div id="payment-element-container" style="margin-bottom: 0.85rem;">
-        <!-- Stripe Payment Element will mount here -->
-        <div style="background: #0b1220; border: 1px solid rgba(100,116,139,.4); border-radius: 10px; padding: 1rem; color: #475569; font-size: 0.85rem; text-align: center;">
-          Payment form loading...
-        </div>
+      <!-- Stripe Card Element (mounted by JS on modal open) -->
+      <div class="join-field">
+        <label>Card details *</label>
+        <div id="card-element" style="background:#0b1220; border:1px solid rgba(100,116,139,.4); border-radius:10px; padding:.75rem .85rem;"></div>
+        <div id="card-errors" style="color:#f87171; font-size:0.8rem; margin-top:0.4rem; min-height:1rem;" role="alert"></div>
       </div>
 
       <button class="join-submit" id="submitBtn" type="submit">
@@ -656,8 +656,8 @@
       </button>
       <div class="join-status" id="signupStatus" aria-live="polite"></div>
       <p class="join-note">
-        Secure payment. Your first 30 days are $7 — then $97/mo automatically.<br>
-        Cancel anytime from your account dashboard.
+        Secure payment powered by Stripe. Card data never touches our servers.<br>
+        Your first 30 days are $7 — then $97/mo. Cancel anytime.
       </p>
     </form>
 
@@ -668,12 +668,45 @@
 
 <script>
 (function(){
+  // ================================================================
+  // AIME Partner Signup — Stripe Elements two-step flow
+  // Step 1: POST /api/partner-signup/create-intent → { clientSecret }
+  // Step 2: stripe.confirmCardPayment(clientSecret)
+  // Step 3: POST /api/partner-signup/finalize → { redirectUrl }
+  // TODO: Swap STRIPE_PK placeholder with real publishable key from Toolkit Bot
+  // ================================================================
+  const STRIPE_PK = 'REPLACE_WITH_STRIPE_PUBLISHABLE_KEY';
+
   const modal = document.getElementById('signupModal');
   const form = document.getElementById('aim-signup-form');
   const statusEl = document.getElementById('signupStatus');
   const submitBtn = document.getElementById('submitBtn');
   const closeModalBtn = document.getElementById('closeModal');
+  const cardErrorsEl = document.getElementById('card-errors');
   const openButtons = Array.from(document.querySelectorAll('.js-open-signup'));
+
+  // Stripe instance — initialized once on first modal open
+  let stripe = null;
+  let cardElement = null;
+  let stripeReady = false;
+
+  function initStripe() {
+    if (stripeReady || STRIPE_PK === 'REPLACE_WITH_STRIPE_PUBLISHABLE_KEY') return;
+    if (typeof Stripe === 'undefined') { console.warn('Stripe.js not loaded'); return; }
+    stripe = Stripe(STRIPE_PK);
+    const elements = stripe.elements({
+      fonts: [{ cssSrc: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap' }]
+    });
+    cardElement = elements.create('card', {
+      style: {
+        base: { fontFamily: 'Inter, sans-serif', fontSize: '15px', color: '#e2e8f0', '::placeholder': { color: '#475569' } },
+        invalid: { color: '#f87171' }
+      }
+    });
+    cardElement.mount('#card-element');
+    cardElement.on('change', (e) => { cardErrorsEl.textContent = e.error ? e.error.message : ''; });
+    stripeReady = true;
+  }
 
   // UTM passthrough
   const params = new URLSearchParams(window.location.search);
@@ -698,7 +731,7 @@
   function openModal() {
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
-    setTimeout(() => document.getElementById('firstName')?.focus(), 10);
+    setTimeout(() => { initStripe(); document.getElementById('firstName')?.focus(); }, 50);
     track('aim_signup_modal_open');
   }
 
@@ -736,47 +769,87 @@
     statusEl.className = 'join-status';
     track('aim_signup_submit', { has_company: !!payload.companyName });
 
+    if (!stripeReady) {
+      statusEl.textContent = 'Payment form is still loading. Please try again in a moment.';
+      statusEl.className = 'join-status err';
+      return;
+    }
+
     try {
-      // TODO: Replace with actual payment endpoint from Toolkit Bot
-      // Option A — POST to /api/aim-signup with Stripe Payment Method ID
-      // Option B — GET /api/aim-checkout?email=...&offer=aim-7day and redirect to Stripe Checkout URL
-      const res = await fetch('/api/aim-signup', {
+      // ── Step 1: Create Payment Intent ($7) ──────────────────
+      const intentRes = await fetch('/api/partner-signup/create-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
+      const intentData = await intentRes.json().catch(() => ({}));
 
-      const data = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
-        if (res.status === 409) {
+      if (!intentRes.ok) {
+        if (intentRes.status === 409) {
           statusEl.innerHTML = 'An account with this email already exists. <a href="https://my.brokertoolkit.app" target="_blank" rel="noopener" style="color:#c7d2fe;text-decoration:underline;">Sign in here</a>.';
           statusEl.className = 'join-status err';
           track('aim_signup_conflict');
           return;
         }
-        throw new Error(data.error || 'Signup failed');
+        throw new Error(intentData.error || 'Could not initialize payment.');
       }
 
-      // If Toolkit Bot returns a Stripe Checkout URL, redirect there
-      if (data.checkoutUrl) {
-        track('aim_signup_redirect_checkout');
-        window.location.href = data.checkoutUrl;
+      const { clientSecret } = intentData;
+      if (!clientSecret) throw new Error('Invalid payment response. Please try again.');
+
+      // ── Step 2: Confirm card payment via Stripe ────────────────────────
+      submitBtn.textContent = 'Verifying payment...';
+      const { paymentIntent, error: stripeError } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: cardElement,
+          billing_details: {
+            name: `${payload.firstName} ${payload.lastName}`.trim(),
+            email: payload.email
+          }
+        }
+      });
+
+      if (stripeError) {
+        cardErrorsEl.textContent = stripeError.message || 'Payment failed. Please check your card details.';
+        track('aim_signup_stripe_error', { stripe_error_code: stripeError.code });
         return;
       }
 
+      if (paymentIntent.status !== 'succeeded') {
+        throw new Error('Payment was not completed. Please try again.');
+      }
+
+      // ── Step 3: Finalize account creation ──────────────────────────
+      submitBtn.textContent = 'Setting up your account...';
+      const finalizeRes = await fetch('/api/partner-signup/finalize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paymentIntentId: paymentIntent.id, ...payload })
+      });
+      const finalizeData = await finalizeRes.json().catch(() => ({}));
+
+      if (!finalizeRes.ok) throw new Error(finalizeData.error || 'Account setup failed.');
+
       track('aim_signup_success', { has_company: !!payload.companyName });
-      statusEl.textContent = 'You\'re in. Check your email for access details.';
-      statusEl.className = 'join-status ok';
-      form.reset();
+
+      // Redirect to welcome page (Toolkit Bot provides the URL)
+      if (finalizeData.redirectUrl) {
+        window.location.href = finalizeData.redirectUrl;
+      } else {
+        statusEl.textContent = "You\'re in. Check your email for access details.";
+        statusEl.className = 'join-status ok';
+        form.reset();
+      }
 
     } catch (err) {
       track('aim_signup_error', { error_message: err.message || 'unknown_error' });
-      statusEl.textContent = 'Sorry, we could not process your request. Please try again.';
+      statusEl.textContent = err.message || 'Something went wrong. Please try again.';
       statusEl.className = 'join-status err';
     } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Pay $7 & Get Full Access';
+      if (submitBtn.disabled) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Pay $7 & Get Full Access';
+      }
     }
   });
 })();
