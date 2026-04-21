@@ -65,7 +65,7 @@
     }
     /* Body offset: 40px bar + 64px nav */
     /* Body bg matches hero so the transparent nav blends seamlessly */
-    body { padding-top: 104px; background: #0b0f1e; }
+    body { padding-top: 0; background: #0b0f1e; }
 
     /* Nav BT logo: full stacked logo-white.png (icon + 'Broker Toolkit' text as one asset) */
     nav .logo-icon { display: none; }
@@ -100,7 +100,8 @@
     /* ===== PARTNERSHIP HERO ===== */
     .aim-hero {
       background: linear-gradient(160deg, #0b0f1e 0%, #0f172a 55%, #0b1220 100%);
-      padding: 5rem 1rem 4rem;
+      /* top padding absorbs the 40px announcement bar + 64px nav so hero fills behind transparent nav */
+      padding: calc(104px + 5rem) 1rem 4rem;
       text-align: center;
     }
     .aim-logos {
