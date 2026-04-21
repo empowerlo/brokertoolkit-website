@@ -33,13 +33,17 @@
     .aim-partner-bar {
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
       border-bottom: 1px solid rgba(255,255,255,0.08);
-      padding: 0.65rem 1rem;
+      padding: 0.75rem 1rem;
       text-align: center;
       font-size: 0.82rem;
-      color: #94a3b8;
+      color: #cbd5e1;
       letter-spacing: 0.02em;
     }
-    .aim-partner-bar strong { color: #e2e8f0; }
+    .aim-partner-bar strong { color: #f1f5f9; }
+
+    /* ===== NAV OVERRIDE ===== */
+    /* Constrain the square logo icon to fit cleanly in the 64px nav */
+    nav .logo-icon { width: 36px; height: 36px; }
 
     /* ===== PARTNERSHIP HERO ===== */
     .aim-hero {
@@ -55,16 +59,30 @@
       margin-bottom: 2.5rem;
       flex-wrap: wrap;
     }
-    .aim-logos img {
-      height: 48px;
+    .aim-logos .logo-aime img {
+      /* Wide aspect ratio (1063x288). At 36px height = ~132px wide */
+      height: 36px;
       width: auto;
     }
+    .aim-logos .logo-bt {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
     .aim-logos .logo-bt img {
-      height: 40px;
+      height: 36px;
+      width: 36px;
+    }
+    .logo-bt-name {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #f1f5f9;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
     }
     .aim-logos-divider {
-      color: #334155;
-      font-size: 1.6rem;
+      color: #475569;
+      font-size: 1.4rem;
       font-weight: 300;
       line-height: 1;
     }
@@ -390,7 +408,7 @@
 <nav>
   <div class="nav-inner">
     <a href="/" class="logo" aria-label="Broker Toolkit home">
-      <img class="logo-icon" src="assets/logo-icon.png" alt="Broker Toolkit">
+      <img class="logo-icon" src="assets/logo-white-icon.png" alt="Broker Toolkit">
     </a>
     <div class="nav-links">
       <button type="button" class="cta-nav js-open-signup" style="background: linear-gradient(135deg,#4c44d3,#6e5ce7); color:#fff; border: none; cursor: pointer; display:inline-flex; align-items:center; justify-content:center; font-size:1rem; font-weight:700; padding:.72rem 1.4rem; border-radius:10px; box-shadow:0 4px 14px rgba(76,68,211,.4);">Get Started for $7</button>
@@ -409,7 +427,8 @@
       </div>
       <div class="aim-logos-divider">×</div>
       <div class="logo-bt">
-        <img src="assets/logo.png" alt="Broker Toolkit">
+        <img src="assets/logo-white-icon.png" alt="Broker Toolkit">
+        <span class="logo-bt-name">Broker Toolkit</span>
       </div>
     </div>
 
