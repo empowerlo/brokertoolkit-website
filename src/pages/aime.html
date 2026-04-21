@@ -497,6 +497,108 @@
     .join-status { margin-top: 0.85rem; font-size: 0.88rem; min-height: 1.2rem; }
     .join-status.ok { color: #22c55e; }
     .join-status.err { color: #f87171; }
+
+    /* ===== SUCCESS STATE ===== */
+    .signup-success {
+      display: none;
+      text-align: center;
+      padding: 1rem 0;
+    }
+    .signup-success.show {
+      display: block;
+    }
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(34, 197, 94, 0.15);
+      border: 2px solid rgba(34, 197, 94, 0.4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+    }
+    .success-icon svg {
+      color: #22c55e;
+    }
+    .signup-success h3 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #f1f5f9;
+      margin: 0 0 0.5rem;
+    }
+    .signup-success .success-sub {
+      font-size: 0.95rem;
+      color: #94a3b8;
+      margin: 0 0 1.75rem;
+      line-height: 1.6;
+    }
+    .success-steps {
+      text-align: left;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .success-steps h4 {
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #a78bfa;
+      margin: 0 0 0.85rem;
+    }
+    .success-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+    .success-step:last-child { margin-bottom: 0; }
+    .success-step .step-num {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      background: rgba(110, 92, 231, 0.25);
+      border: 1px solid rgba(110, 92, 231, 0.5);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #c4b5fd;
+      margin-top: 0.1rem;
+    }
+    .success-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, #4c44d3, #6e5ce7);
+      color: #fff;
+      text-decoration: none;
+      padding: 0.85rem 1.5rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: opacity 0.15s;
+    }
+    .success-cta:hover { opacity: 0.85; }
+    .success-help {
+      margin-top: 1.25rem;
+      font-size: 0.8rem;
+      color: #475569;
+      line-height: 1.5;
+    }
+    .success-help a {
+      color: #a78bfa;
+      text-decoration: none;
+    }
+    .success-help a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -790,42 +892,76 @@
       <span>AIME Exclusive: <strong>$7 today</strong> unlocks full access for 30 days, then $97/mo</span>
     </div>
 
-    <form id="aim-signup-form" novalidate>
-      <div class="field-row">
-        <div class="join-field">
-          <label for="firstName">First name *</label>
-          <input id="firstName" name="firstName" type="text" autocomplete="given-name" placeholder="John" required>
+    <!-- FORM STATE -->
+    <div id="formState">
+      <form id="aim-signup-form" novalidate>
+        <div class="field-row">
+          <div class="join-field">
+            <label for="firstName">First name *</label>
+            <input id="firstName" name="firstName" type="text" autocomplete="given-name" placeholder="John" required>
+          </div>
+          <div class="join-field">
+            <label for="lastName">Last name *</label>
+            <input id="lastName" name="lastName" type="text" autocomplete="family-name" placeholder="Smith" required>
+          </div>
         </div>
         <div class="join-field">
-          <label for="lastName">Last name *</label>
-          <input id="lastName" name="lastName" type="text" autocomplete="family-name" placeholder="Smith" required>
+          <label for="email">Work email *</label>
+          <input id="email" name="email" type="email" autocomplete="email" placeholder="you@broker.com" required>
+        </div>
+        <div class="join-field">
+          <label for="companyName">Company / Broker firm (optional)</label>
+          <input id="companyName" name="companyName" type="text" autocomplete="organization" placeholder="Your firm name">
+        </div>
+
+        <!-- Stripe Card Element (mounted by JS on modal open) -->
+        <div class="join-field">
+          <label>Card details *</label>
+          <div id="card-element" style="background:#0b1220; border:1px solid rgba(100,116,139,.4); border-radius:10px; padding:.75rem .85rem;"></div>
+          <div id="card-errors" style="color:#f87171; font-size:0.8rem; margin-top:0.4rem; min-height:1rem;" role="alert"></div>
+        </div>
+
+        <button class="join-submit" id="submitBtn" type="submit">
+          Pay $7 &amp; Get Full Access
+        </button>
+        <div class="join-status" id="signupStatus" aria-live="polite"></div>
+        <p class="join-note">
+          Secure payment powered by Stripe. Card data never touches our servers.<br>
+          Your first 30 days are $7, then $97/mo. Cancel anytime. You'll get login details by email within 5 minutes.
+        </p>
+      </form>
+    </div>
+
+    <!-- SUCCESS STATE -->
+    <div class="signup-success" id="successState">
+      <div class="success-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      <h3>You're in!</h3>
+      <p class="success-sub">Payment confirmed. We're setting up your Broker Toolkit account now.</p>
+      <div class="success-steps">
+        <h4>What happens next</h4>
+        <div class="success-step">
+          <span class="step-num">1</span>
+          <span>Check your email for a setup link (arrives within 5 minutes)</span>
+        </div>
+        <div class="success-step">
+          <span class="step-num">2</span>
+          <span>Click the link to set your password</span>
+        </div>
+        <div class="success-step">
+          <span class="step-num">3</span>
+          <span>Log in and start using all 4 tools immediately</span>
         </div>
       </div>
-      <div class="join-field">
-        <label for="email">Work email *</label>
-        <input id="email" name="email" type="email" autocomplete="email" placeholder="you@broker.com" required>
-      </div>
-      <div class="join-field">
-        <label for="companyName">Company / Broker firm (optional)</label>
-        <input id="companyName" name="companyName" type="text" autocomplete="organization" placeholder="Your firm name">
-      </div>
-
-      <!-- Stripe Card Element (mounted by JS on modal open) -->
-      <div class="join-field">
-        <label>Card details *</label>
-        <div id="card-element" style="background:#0b1220; border:1px solid rgba(100,116,139,.4); border-radius:10px; padding:.75rem .85rem;"></div>
-        <div id="card-errors" style="color:#f87171; font-size:0.8rem; margin-top:0.4rem; min-height:1rem;" role="alert"></div>
-      </div>
-
-      <button class="join-submit" id="submitBtn" type="submit">
-        Pay $7 &amp; Get Full Access
-      </button>
-      <div class="join-status" id="signupStatus" aria-live="polite"></div>
-      <p class="join-note">
-        Secure payment powered by Stripe. Card data never touches our servers.<br>
-        Your first 30 days are $7, then $97/mo. Cancel anytime. You'll get login details by email within 5 minutes.
+      <a href="https://my.brokertoolkit.app" class="success-cta" target="_blank" rel="noopener">
+        Go to Broker Toolkit
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+      <p class="success-help">
+        Didn't get the email? Check your spam folder, or contact <a href="mailto:support@brokertoolkit.app">support@brokertoolkit.app</a>
       </p>
-    </form>
+    </div>
 
   </section>
 </div>
@@ -1013,13 +1149,24 @@
 
       track('aim_signup_success', { has_company: !!payload.companyName });
 
-      // Redirect to welcome page (Toolkit Bot provides the URL)
+      // Show success state
       if (finalizeData.redirectUrl) {
         window.location.href = finalizeData.redirectUrl;
       } else {
-        statusEl.textContent = "You\'re in. Check your email for access details.";
-        statusEl.className = 'join-status ok';
-        form.reset();
+        // Hide form, show success screen
+        document.getElementById('formState').style.display = 'none';
+        document.querySelector('.modal-offer-badge').style.display = 'none';
+        var modalTitle = document.getElementById('signup-modal-title');
+        if (modalTitle) modalTitle.parentElement.style.display = 'none';
+        var successEl = document.getElementById('successState');
+        successEl.classList.add('show');
+
+        // If account already existed, adjust the message
+        if (finalizeData.accountExists) {
+          successEl.querySelector('h3').textContent = 'Payment confirmed!';
+          successEl.querySelector('.success-sub').textContent = 'It looks like you already have a Broker Toolkit account. Your payment has been applied -- just sign in to get started.';
+          successEl.querySelector('.success-steps').style.display = 'none';
+        }
       }
 
     } catch (err) {
