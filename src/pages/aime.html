@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <title>AIME Members — Get Broker Toolkit for $7 | Broker Toolkit</title>
+  <meta name="description" content="Exclusive offer for AIME members. Get all of Broker Toolkit — AI newsletters, rate monitoring, activity tracking, and loan analysis — for just $7 your first 30 days.">
+  <link rel="canonical" href="https://brokertoolkit.app/aime">
+  <meta property="og:title" content="AIME Members — Get Broker Toolkit for $7">
+  <meta property="og:description" content="Exclusive vendor partner offer for AIME members. Start for $7, then $97/mo.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://brokertoolkit.app/aime">
+  <meta property="og:image" content="https://brokertoolkit.app/assets/logo.png">
+  <meta property="og:site_name" content="Broker Toolkit">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AIME Members — Get Broker Toolkit for $7">
+  <meta name="twitter:description" content="Exclusive vendor partner offer for AIME members. Start for $7, then $97/mo.">
+  <meta name="twitter:image" content="https://brokertoolkit.app/assets/logo.png">
+  <!-- noindex: partner-specific offer page -->
+  <meta name="robots" content="noindex, nofollow">
+  <!-- Stripe.js -->
+  <script src="https://js.stripe.com/v3/" async></script>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"></noscript>
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    /* ===== AIM PARTNERSHIP BANNER ===== */
+    .aim-partner-bar {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 0.65rem 1rem;
+      text-align: center;
+      font-size: 0.82rem;
+      color: #94a3b8;
+      letter-spacing: 0.02em;
+    }
+    .aim-partner-bar strong { color: #e2e8f0; }
+
+    /* ===== PARTNERSHIP HERO ===== */
+    .aim-hero {
+      background: linear-gradient(160deg, #0b0f1e 0%, #0f172a 55%, #0b1220 100%);
+      padding: 5rem 1rem 4rem;
+      text-align: center;
+    }
+    .aim-logos {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+    }
+    .aim-logos img {
+      height: 48px;
+      width: auto;
+    }
+    .aim-logos .logo-bt img {
+      height: 40px;
+    }
+    .aim-logos-divider {
+      color: #334155;
+      font-size: 1.6rem;
+      font-weight: 300;
+      line-height: 1;
+    }
+    .aim-hero-badge {
+      display: inline-block;
+      background: rgba(110, 92, 231, 0.15);
+      border: 1px solid rgba(110, 92, 231, 0.4);
+      color: #a78bfa;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.9rem;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+    }
+    .aim-hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      line-height: 1.1;
+      color: #f1f5f9;
+      margin-bottom: 1.25rem;
+      max-width: 780px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .aim-hero h1 span {
+      background: linear-gradient(135deg, #6e5ce7, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .aim-hero-sub {
+      font-size: 1.15rem;
+      color: #94a3b8;
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.65;
+    }
+    .aim-offer-box {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(110, 92, 231, 0.1);
+      border: 2px solid rgba(110, 92, 231, 0.5);
+      border-radius: 16px;
+      padding: 1.5rem 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .aim-offer-box .offer-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #a78bfa;
+      margin-bottom: 0.35rem;
+    }
+    .aim-offer-box .offer-price {
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: #f1f5f9;
+      line-height: 1;
+    }
+    .aim-offer-box .offer-price span {
+      font-size: 1.4rem;
+      font-weight: 600;
+      vertical-align: top;
+      margin-top: 0.5rem;
+      display: inline-block;
+    }
+    .aim-offer-box .offer-duration {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      margin-top: 0.4rem;
+    }
+    .aim-offer-box .offer-then {
+      font-size: 0.82rem;
+      color: #64748b;
+      margin-top: 0.25rem;
+    }
+    .aim-hero-cta .btn {
+      min-width: 260px;
+    }
+
+    /* ===== WHAT YOU GET ===== */
+    .aim-tools-section {
+      background: #0f172a;
+      padding: 5rem 1rem;
+    }
+
+    /* ===== SOCIAL PROOF ===== */
+    .aim-proof-section {
+      background: #0b1220;
+      padding: 4.5rem 1rem;
+    }
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .proof-stat {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+    }
+    .proof-stat .stat-num {
+      font-size: 2.6rem;
+      font-weight: 900;
+      color: #f1f5f9;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .proof-stat .stat-label {
+      font-size: 0.88rem;
+      color: #64748b;
+    }
+
+    /* ===== PARTNERSHIP CREDIBILITY ===== */
+    .aim-partner-section {
+      background: #0f172a;
+      padding: 4.5rem 1rem;
+    }
+    .partner-card {
+      max-width: 700px;
+      margin: 0 auto;
+      background: rgba(110, 92, 231, 0.06);
+      border: 1px solid rgba(110, 92, 231, 0.25);
+      border-radius: 16px;
+      padding: 2.5rem;
+      text-align: center;
+    }
+    .partner-card .partner-logos {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .partner-card .partner-logos img {
+      height: 36px;
+      width: auto;
+      opacity: 0.85;
+    }
+    .partner-card .partner-logos .divider {
+      color: #334155;
+      font-size: 1.2rem;
+    }
+    .partner-card p {
+      color: #94a3b8;
+      font-size: 0.98rem;
+      line-height: 1.7;
+      margin-bottom: 0;
+    }
+
+    /* ===== FEATURES DETAIL ===== */
+    .aim-features-section {
+      background: #0b1220;
+      padding: 5rem 1rem;
+    }
+    .feature-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      max-width: 920px;
+      margin: 0 auto 2rem;
+      align-items: start;
+    }
+    @media (max-width: 640px) {
+      .feature-row { grid-template-columns: 1fr; }
+    }
+    .feature-item {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .feature-item .fi-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(110, 92, 231, 0.12);
+      border: 1px solid rgba(110, 92, 231, 0.25);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #8b5cf6;
+    }
+    .feature-item h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin: 0 0 0.35rem;
+    }
+    .feature-item p {
+      font-size: 0.88rem;
+      color: #64748b;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* ===== CTA SECTION ===== */
+    .aim-cta-section {
+      background: linear-gradient(160deg, #0f172a 0%, #0b0f1e 100%);
+      padding: 5.5rem 1rem;
+      text-align: center;
+    }
+
+    /* ===== PAYMENT MODAL ===== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2,6,23,.82);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      width: 100%;
+      max-width: 520px;
+      background: #0f172a;
+      border: 1px solid rgba(110, 92, 231, .35);
+      border-radius: 16px;
+      padding: 1.5rem 1.5rem 1.25rem;
+      box-shadow: 0 24px 90px rgba(0,0,0,.6);
+      max-height: 95vh;
+      overflow-y: auto;
+    }
+    .modal-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .modal-head h3 { font-size: 1.2rem; margin: 0 0 0.2rem; color: #f1f5f9; }
+    .modal-head p { font-size: 0.82rem; color: #64748b; margin: 0; }
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: #64748b;
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0;
+    }
+    .modal-offer-badge {
+      background: rgba(110, 92, 231, 0.1);
+      border: 1px solid rgba(110, 92, 231, 0.3);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.85rem;
+      color: #a78bfa;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .modal-offer-badge strong { color: #c4b5fd; }
+    .join-field { margin-bottom: 0.85rem; }
+    .join-field label {
+      display: block;
+      color: #94a3b8;
+      font-weight: 600;
+      font-size: 0.82rem;
+      margin-bottom: 0.3rem;
+    }
+    .join-field input {
+      width: 100%;
+      padding: 0.75rem 0.85rem;
+      background: #0b1220;
+      border: 1px solid rgba(100, 116, 139, .4);
+      border-radius: 10px;
+      color: #e2e8f0;
+      font-size: 0.92rem;
+      box-sizing: border-box;
+    }
+    .join-field input:focus {
+      outline: none;
+      border-color: #6e5ce7;
+      box-shadow: 0 0 0 2px rgba(110, 92, 231, .2);
+    }
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+    .join-submit {
+      width: 100%;
+      margin-top: 0.5rem;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, #4c44d3, #6e5ce7);
+      color: #fff;
+      padding: 0.95rem 1rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1rem;
+      box-shadow: 0 6px 20px rgba(76, 68, 211, .4);
+    }
+    .join-submit:disabled { opacity: .6; cursor: not-allowed; }
+    .join-note { margin-top: 0.75rem; font-size: 0.75rem; color: #475569; text-align: center; line-height: 1.5; }
+    .join-status { margin-top: 0.85rem; font-size: 0.88rem; min-height: 1.2rem; }
+    .join-status.ok { color: #22c55e; }
+    .join-status.err { color: #f87171; }
+  </style>
+</head>
+<body>
+
+<!-- PARTNERSHIP BAR -->
+<div class="aim-partner-bar">
+  <strong>AIME Vendor Partner Offer</strong> — Exclusive pricing for Association of Independent Mortgage Experts members
+</div>
+
+<!-- NAV (minimal — no distractions on this page) -->
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo" aria-label="Broker Toolkit home">
+      <img class="logo-icon" src="assets/logo-icon.png" alt="Broker Toolkit">
+    </a>
+    <div class="nav-links">
+      <button type="button" class="cta-nav js-open-signup" style="background: linear-gradient(135deg,#4c44d3,#6e5ce7); color:#fff; border: none; cursor: pointer; display:inline-flex; align-items:center; justify-content:center; font-size:1rem; font-weight:700; padding:.72rem 1.4rem; border-radius:10px; box-shadow:0 4px 14px rgba(76,68,211,.4);">Get Started — $7</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="aim-hero">
+  <div class="container">
+
+    <!-- Logos -->
+    <div class="aim-logos">
+      <div class="logo-aime">
+        <img src="assets/aime-logo-white.png" alt="AIME — Association of Independent Mortgage Experts">
+      </div>
+      <div class="aim-logos-divider">×</div>
+      <div class="logo-bt">
+        <img src="assets/logo.png" alt="Broker Toolkit">
+      </div>
+    </div>
+
+    <div class="aim-hero-badge">Exclusive AIME Member Offer</div>
+
+    <h1>The Mortgage Tools Your Competition<br><span>Doesn't Know About Yet</span></h1>
+
+    <p class="aim-hero-sub">As an AIME vendor partner, we're opening Broker Toolkit to AIME members at a special introductory rate. AI newsletters, 50-state rate monitoring, daily activity tracking, and professional loan analysis — in one platform built for independent mortgage brokers.</p>
+
+    <div class="aim-offer-box">
+      <div class="offer-label">Member Introductory Rate</div>
+      <div class="offer-price"><span>$</span>7</div>
+      <div class="offer-duration">your first 30 days</div>
+      <div class="offer-then">Then $97/mo — cancel anytime</div>
+    </div>
+
+    <div class="aim-hero-cta">
+      <button type="button" class="btn btn-accent btn-lg js-open-signup">Claim Your $7 Access</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== SOCIAL PROOF STATS ===== -->
+<section class="aim-proof-section">
+  <div class="container">
+    <div class="proof-grid">
+      <div class="proof-stat">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Production tools in one platform</div>
+      </div>
+      <div class="proof-stat">
+        <div class="stat-num">50</div>
+        <div class="stat-label">States of live rate monitoring</div>
+      </div>
+      <div class="proof-stat">
+        <div class="stat-num">$97</div>
+        <div class="stat-label">Replaces $500–1,000+/mo in subscriptions</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PARTNERSHIP SECTION ===== -->
+<section class="aim-partner-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">The Partnership</span>
+      <h2>Built for Independent Brokers,<br>Backed by AIME</h2>
+    </div>
+    <div class="partner-card">
+      <div class="partner-logos">
+        <img src="assets/aime-logo-white.png" alt="AIME">
+        <span class="divider">×</span>
+        <img src="assets/logo.png" alt="Broker Toolkit">
+      </div>
+      <p>AIME exists to help independent mortgage brokers compete and win. We built Broker Toolkit for the same reason — to give working loan officers practical tools that save time and drive funded production, without agency overhead or enterprise price tags.</p>
+      <p style="margin-top: 0.85rem;">This partnership puts a powerful production platform in the hands of AIME members at a price that makes saying yes easy. The tools work. The integration is real. And the team behind it has been building mortgage technology since 2018.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURES DETAIL ===== -->
+<section class="aim-features-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">What You Get</span>
+      <h2>Four Tools. One Price. No Fluff.</h2>
+      <p class="section-sub">Every tool is built around the specific problems independent mortgage brokers deal with every day.</p>
+    </div>
+
+    <div class="feature-row">
+      <div class="feature-item">
+        <div class="fi-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6z"/></svg>
+        </div>
+        <div>
+          <h4>Newsletter Pro</h4>
+          <p>AI-generated, hyper-local newsletters for prospects, past clients, and referral partners. Pick your audience, pick your market — content goes out on schedule. Sends directly from HighLevel or standalone.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="fi-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+        </div>
+        <div>
+          <h4>Activity Tracker</h4>
+          <p>Track daily calls, talk-tos, appointments, and social engagement against real production goals. The habits that separate top producers aren't secret — they're just not tracked. Now they are.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-row">
+      <div class="feature-item">
+        <div class="fi-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div>
+          <h4>Rate Monitor</h4>
+          <p>Live Conventional, FHA, and VA rates across all 50 states with daily trend tracking. Know exactly where rates stand in your market, without bouncing between three different websites every morning.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="fi-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div>
+          <h4>Loan Advisor</h4>
+          <p>Side-by-side loan comparisons, refinance break-even analysis, and cash-out calculators. Professional-grade analysis tools you can share directly with borrowers — no spreadsheet required.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== THE TOOLS OVERVIEW ===== -->
+<section class="aim-tools-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">The Problem It Solves</span>
+      <h2>You're Running Your Business on<br>Four Different Subscriptions</h2>
+      <p class="section-sub">Newsletter service. Activity tracker. Rate alert tool. Loan comparison calculator. That's four logins, four invoices, and $500–1,000+ every month before you've closed a single loan. Broker Toolkit replaces all of it for $97/mo — and right now, AIME members pay $7 for the first 30 days.</p>
+    </div>
+    <div class="features-grid" style="max-width: 780px; margin: 0 auto;">
+      <div class="feature-card">
+        <h3>Before Broker Toolkit</h3>
+        <ul style="color: #64748b; font-size: 0.9rem; line-height: 2; padding-left: 1.25rem; margin: 0;">
+          <li>Separate newsletter tool ($49–149/mo)</li>
+          <li>Separate activity tracker ($30–80/mo)</li>
+          <li>Separate rate monitoring ($50–200/mo)</li>
+          <li>Separate loan analysis tools ($50–150/mo)</li>
+          <li>Four logins, four support tickets, four invoices</li>
+        </ul>
+      </div>
+      <div class="feature-card" style="border-color: rgba(110, 92, 231, 0.4);">
+        <h3 style="color: #a78bfa;">With Broker Toolkit</h3>
+        <ul style="color: #94a3b8; font-size: 0.9rem; line-height: 2; padding-left: 1.25rem; margin: 0;">
+          <li>All four tools in one platform</li>
+          <li>One login, one subscription</li>
+          <li>$97/mo — one invoice</li>
+          <li>HighLevel integration (optional)</li>
+          <li>AIME members: first 30 days for $7</li>
+        </ul>
+      </div>
+    </div>
+    <div style="text-align: center; margin-top: 3rem;">
+      <button type="button" class="btn btn-accent btn-lg js-open-signup">Claim Your $7 Access</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section class="aim-proof-section" style="padding: 5rem 1rem;">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">How It Works</span>
+      <h2>Simple. Straightforward. No Gotchas.</h2>
+    </div>
+    <div class="features-grid" style="max-width: 850px; margin: 0 auto; counter-reset: steps;">
+      <div class="feature-card" style="position: relative; padding-top: 1.5rem;">
+        <div style="position: absolute; top: -14px; left: 1.25rem; background: #6e5ce7; color: #fff; font-size: 0.75rem; font-weight: 800; padding: 0.2rem 0.6rem; border-radius: 20px;">STEP 1</div>
+        <h3>Pay $7 Today</h3>
+        <p>Your first payment of $7 unlocks full access to all four Broker Toolkit tools for 30 days. No limitations, no restricted features — the complete platform from day one.</p>
+      </div>
+      <div class="feature-card" style="position: relative; padding-top: 1.5rem;">
+        <div style="position: absolute; top: -14px; left: 1.25rem; background: #6e5ce7; color: #fff; font-size: 0.75rem; font-weight: 800; padding: 0.2rem 0.6rem; border-radius: 20px;">STEP 2</div>
+        <h3>Use Everything for 30 Days</h3>
+        <p>Get your newsletters set up. Track your daily activities. Monitor rates in your market. Run loan comparisons for borrowers. Put every tool to work during your first month.</p>
+      </div>
+      <div class="feature-card" style="position: relative; padding-top: 1.5rem;">
+        <div style="position: absolute; top: -14px; left: 1.25rem; background: #6e5ce7; color: #fff; font-size: 0.75rem; font-weight: 800; padding: 0.2rem 0.6rem; border-radius: 20px;">STEP 3</div>
+        <h3>Renew at $97/mo</h3>
+        <p>After 30 days, your subscription continues at the standard $97/mo rate. Cancel anytime, no questions asked. No long-term contracts, no cancellation fees.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FINAL CTA ===== -->
+<section class="aim-cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <div class="aim-hero-badge" style="margin-bottom: 1.25rem;">AIME Member Exclusive</div>
+      <h2 style="font-size: clamp(1.8rem, 4vw, 2.8rem);">Ready to Close More Loans?</h2>
+      <p style="max-width: 520px; margin: 0 auto 2rem; color: #94a3b8; font-size: 1.05rem;">Independent brokers who track their activities, stay top of mind with clients, and respond fast to rate changes win more business. Broker Toolkit makes all three automatic.</p>
+      <div class="aim-offer-box" style="margin-bottom: 2rem; margin-left: auto; margin-right: auto;">
+        <div class="offer-label">Your AIME Member Rate</div>
+        <div class="offer-price"><span>$</span>7</div>
+        <div class="offer-duration">first 30 days — then $97/mo</div>
+      </div>
+      <button type="button" class="btn btn-accent btn-lg js-open-signup">Claim Your $7 Access</button>
+      <p style="margin-top: 1rem; font-size: 0.8rem; color: #475569;">No long-term contracts. Cancel anytime.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== PAYMENT MODAL ===== -->
+<div class="modal-overlay" id="signupModal" aria-hidden="true">
+  <section class="modal" role="dialog" aria-modal="true" aria-labelledby="signup-modal-title">
+
+    <div class="modal-head">
+      <div>
+        <h3 id="signup-modal-title">Claim Your AIME Member Access</h3>
+        <p>Get full access to all 4 tools for $7 your first 30 days</p>
+      </div>
+      <button class="modal-close" type="button" id="closeModal" aria-label="Close">×</button>
+    </div>
+
+    <div class="modal-offer-badge">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <span>AIME Exclusive: <strong>$7 today</strong> unlocks full access for 30 days, then $97/mo</span>
+    </div>
+
+    <form id="aim-signup-form" novalidate>
+      <div class="field-row">
+        <div class="join-field">
+          <label for="firstName">First name *</label>
+          <input id="firstName" name="firstName" type="text" autocomplete="given-name" placeholder="John" required>
+        </div>
+        <div class="join-field">
+          <label for="lastName">Last name *</label>
+          <input id="lastName" name="lastName" type="text" autocomplete="family-name" placeholder="Smith" required>
+        </div>
+      </div>
+      <div class="join-field">
+        <label for="email">Work email *</label>
+        <input id="email" name="email" type="email" autocomplete="email" placeholder="you@broker.com" required>
+      </div>
+      <div class="join-field">
+        <label for="companyName">Company / Broker firm (optional)</label>
+        <input id="companyName" name="companyName" type="text" autocomplete="organization" placeholder="Your firm name">
+      </div>
+
+      <!-- Stripe Card Element (mounted by JS on modal open) -->
+      <div class="join-field">
+        <label>Card details *</label>
+        <div id="card-element" style="background:#0b1220; border:1px solid rgba(100,116,139,.4); border-radius:10px; padding:.75rem .85rem;"></div>
+        <div id="card-errors" style="color:#f87171; font-size:0.8rem; margin-top:0.4rem; min-height:1rem;" role="alert"></div>
+      </div>
+
+      <button class="join-submit" id="submitBtn" type="submit">
+        Pay $7 &amp; Get Full Access
+      </button>
+      <div class="join-status" id="signupStatus" aria-live="polite"></div>
+      <p class="join-note">
+        Secure payment powered by Stripe. Card data never touches our servers.<br>
+        Your first 30 days are $7 — then $97/mo. Cancel anytime.
+      </p>
+    </form>
+
+  </section>
+</div>
+
+<!-- FOOTER -->
+
+<script>
+(function(){
+  // ================================================================
+  // AIME Partner Signup — Stripe Elements two-step flow
+  // Step 1: POST /api/partner-signup/create-intent → { clientSecret }
+  // Step 2: stripe.confirmCardPayment(clientSecret)
+  // Step 3: POST /api/partner-signup/finalize → { redirectUrl }
+  // TODO: Swap STRIPE_PK placeholder with real publishable key from Toolkit Bot
+  // ================================================================
+  const STRIPE_PK = 'REPLACE_WITH_STRIPE_PUBLISHABLE_KEY';
+
+  const modal = document.getElementById('signupModal');
+  const form = document.getElementById('aim-signup-form');
+  const statusEl = document.getElementById('signupStatus');
+  const submitBtn = document.getElementById('submitBtn');
+  const closeModalBtn = document.getElementById('closeModal');
+  const cardErrorsEl = document.getElementById('card-errors');
+  const openButtons = Array.from(document.querySelectorAll('.js-open-signup'));
+
+  // Stripe instance — initialized once on first modal open
+  let stripe = null;
+  let cardElement = null;
+  let stripeReady = false;
+
+  function initStripe() {
+    if (stripeReady || STRIPE_PK === 'REPLACE_WITH_STRIPE_PUBLISHABLE_KEY') return;
+    if (typeof Stripe === 'undefined') { console.warn('Stripe.js not loaded'); return; }
+    stripe = Stripe(STRIPE_PK);
+    const elements = stripe.elements({
+      fonts: [{ cssSrc: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap' }]
+    });
+    cardElement = elements.create('card', {
+      style: {
+        base: { fontFamily: 'Inter, sans-serif', fontSize: '15px', color: '#e2e8f0', '::placeholder': { color: '#475569' } },
+        invalid: { color: '#f87171' }
+      }
+    });
+    cardElement.mount('#card-element');
+    cardElement.on('change', (e) => { cardErrorsEl.textContent = e.error ? e.error.message : ''; });
+    stripeReady = true;
+  }
+
+  // UTM passthrough
+  const params = new URLSearchParams(window.location.search);
+  const attribution = {
+    utm_source: params.get('utm_source') || 'aime',
+    utm_medium: params.get('utm_medium') || 'partner',
+    utm_campaign: params.get('utm_campaign') || 'aim-vendor-offer',
+    utm_content: params.get('utm_content') || '',
+    utm_term: params.get('utm_term') || '',
+    fbclid: params.get('fbclid') || '',
+    gclid: params.get('gclid') || '',
+    gbraid: params.get('gbraid') || '',
+    msclkid: params.get('msclkid') || '',
+    twclid: params.get('twclid') || ''
+  };
+
+  function track(eventName, extra) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({ event: eventName, page_type: 'aime-partner', page_path: '/aime' }, attribution, extra || {}));
+  }
+
+  function openModal() {
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    setTimeout(() => { initStripe(); document.getElementById('firstName')?.focus(); }, 50);
+    track('aim_signup_modal_open');
+  }
+
+  function closeModal() {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  openButtons.forEach(btn => btn.addEventListener('click', (e) => { e.preventDefault(); openModal(); }));
+  closeModalBtn?.addEventListener('click', closeModal);
+  modal?.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
+    const payload = {
+      email: String(fd.get('email') || '').trim(),
+      firstName: String(fd.get('firstName') || '').trim(),
+      lastName: String(fd.get('lastName') || '').trim(),
+      companyName: String(fd.get('companyName') || '').trim(),
+      offer: 'aim-7day',
+      ...attribution
+    };
+
+    if (!payload.email || !payload.firstName || !payload.lastName) {
+      statusEl.textContent = 'Please complete all required fields.';
+      statusEl.className = 'join-status err';
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Processing...';
+    statusEl.textContent = '';
+    statusEl.className = 'join-status';
+    track('aim_signup_submit', { has_company: !!payload.companyName });
+
+    if (!stripeReady) {
+      statusEl.textContent = 'Payment form is still loading. Please try again in a moment.';
+      statusEl.className = 'join-status err';
+      return;
+    }
+
+    try {
+      // ── Step 1: Create Payment Intent ($7) ──────────────────
+      const intentRes = await fetch('/api/partner-signup/create-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const intentData = await intentRes.json().catch(() => ({}));
+
+      if (!intentRes.ok) {
+        if (intentRes.status === 409) {
+          statusEl.innerHTML = 'An account with this email already exists. <a href="https://my.brokertoolkit.app" target="_blank" rel="noopener" style="color:#c7d2fe;text-decoration:underline;">Sign in here</a>.';
+          statusEl.className = 'join-status err';
+          track('aim_signup_conflict');
+          return;
+        }
+        throw new Error(intentData.error || 'Could not initialize payment.');
+      }
+
+      const { clientSecret } = intentData;
+      if (!clientSecret) throw new Error('Invalid payment response. Please try again.');
+
+      // ── Step 2: Confirm card payment via Stripe ────────────────────────
+      submitBtn.textContent = 'Verifying payment...';
+      const { paymentIntent, error: stripeError } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: cardElement,
+          billing_details: {
+            name: `${payload.firstName} ${payload.lastName}`.trim(),
+            email: payload.email
+          }
+        }
+      });
+
+      if (stripeError) {
+        cardErrorsEl.textContent = stripeError.message || 'Payment failed. Please check your card details.';
+        track('aim_signup_stripe_error', { stripe_error_code: stripeError.code });
+        return;
+      }
+
+      if (paymentIntent.status !== 'succeeded') {
+        throw new Error('Payment was not completed. Please try again.');
+      }
+
+      // ── Step 3: Finalize account creation ──────────────────────────
+      submitBtn.textContent = 'Setting up your account...';
+      const finalizeRes = await fetch('/api/partner-signup/finalize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paymentIntentId: paymentIntent.id, ...payload })
+      });
+      const finalizeData = await finalizeRes.json().catch(() => ({}));
+
+      if (!finalizeRes.ok) throw new Error(finalizeData.error || 'Account setup failed.');
+
+      track('aim_signup_success', { has_company: !!payload.companyName });
+
+      // Redirect to welcome page (Toolkit Bot provides the URL)
+      if (finalizeData.redirectUrl) {
+        window.location.href = finalizeData.redirectUrl;
+      } else {
+        statusEl.textContent = "You\'re in. Check your email for access details.";
+        statusEl.className = 'join-status ok';
+        form.reset();
+      }
+
+    } catch (err) {
+      track('aim_signup_error', { error_message: err.message || 'unknown_error' });
+      statusEl.textContent = err.message || 'Something went wrong. Please try again.';
+      statusEl.className = 'join-status err';
+    } finally {
+      if (submitBtn.disabled) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Pay $7 & Get Full Access';
+      }
+    }
+  });
+})();
+</script>
+
+<script src="main.js" defer></script>
+</body>
+</html>
