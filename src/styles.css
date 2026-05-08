@@ -39,7 +39,7 @@ nav {
   height: 64px; display: flex; align-items: center; justify-content: space-between;
 }
 .logo { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 1.15rem; color: #fff; }
-.logo-icon { width: 96px; height: 96px; }
+.logo-icon { width: 44px; height: 44px; }
 nav.nav-scrolled {
   background: rgba(22, 37, 66, 0.95);
   backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -418,7 +418,7 @@ footer::before {
   @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
   nav:has(.nav-links.open) { background: rgba(22, 37, 66, 0.98); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
   .nav-hamburger { display: block; }
-  .logo-icon { width: 72px; height: 72px; }
+  .logo-icon { width: 44px; height: 44px; }
   .nav-dropdown-menu { position: static; transform: none; background: transparent; border: none; box-shadow: none; padding: 0 0 0 1rem; }
   .nav-dropdown:hover .nav-dropdown-menu { display: flex; }
 
