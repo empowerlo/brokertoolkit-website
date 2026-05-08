@@ -29,7 +29,31 @@ const criticalCss = new CleanCSS({ level: 2 }).minify(criticalCssRaw).styles;
 // Cache-busting hashes
 const cssHash = crypto.createHash('md5').update(fs.readFileSync(path.join(ROOT, 'src', 'styles.css'))).digest('hex').slice(0, 8);
 const jsHash = crypto.createHash('md5').update(fs.readFileSync(path.join(ROOT, 'src', 'main.js'))).digest('hex').slice(0, 8);
-console.log(`Cache busters: styles.css?v=${cssHash} main.js?v=${jsHash}`);
+const brandAssetFiles = [
+  'logo.png',
+  'logo-white.png',
+  'logo-icon.png',
+  'logo-white-icon.png',
+  'logo-horizontal.png',
+  'logo-horizontal-white.png',
+  'favicon.ico',
+  'favicon-16x16.png',
+  'favicon-32x32.png',
+  'apple-touch-icon.png',
+  'og-image.png',
+];
+const brandAssetsHash = crypto.createHash('md5');
+for (const file of brandAssetFiles) {
+  const assetPath = path.join(ROOT, 'assets', file);
+  if (fs.existsSync(assetPath)) brandAssetsHash.update(fs.readFileSync(assetPath));
+}
+const assetHash = brandAssetsHash.digest('hex').slice(0, 8);
+console.log(`Cache busters: styles.css?v=${cssHash} main.js?v=${jsHash} brand assets?v=${assetHash}`);
+
+function cacheBustBrandAssets(content) {
+  const assetPattern = /(assets\/(?:logo(?:-(?:white(?:-icon)?|icon|horizontal(?:-white)?))?|favicon(?:-16x16|-32x32)?|apple-touch-icon|og-image)\.(?:png|svg|ico))(?:\?v=[a-f0-9]+)?/g;
+  return content.replace(assetPattern, `$1?v=${assetHash}`);
+}
 
 function findPages(dir, base = '') {
   let results = [];
@@ -101,6 +125,9 @@ for (const page of pages) {
     const defaultOg = `<meta property="og:image" content="https://brokertoolkit.app/assets/og-image.png">\n  <meta property="og:image:width" content="1200">\n  <meta property="og:image:height" content="630">\n  <meta name="twitter:card" content="summary_large_image">\n  <meta name="twitter:image" content="https://brokertoolkit.app/assets/og-image.png">`;
     content = content.replace('</head>', defaultOg + '\n</head>');
   }
+
+  // Cache-bust brand image assets so mobile browsers do not keep immutable old logos.
+  content = cacheBustBrandAssets(content);
 
   // Google Tag Manager (head) — as high as possible
   const gtmHead = `<!-- Google Tag Manager -->\n  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':\n  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\n  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=\n  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\n  })(window,document,'script','dataLayer','GTM-53N4ZRS3');</script>\n  <!-- End Google Tag Manager -->`;
