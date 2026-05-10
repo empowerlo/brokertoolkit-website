@@ -63,6 +63,13 @@ module.exports = async function handler(req, res) {
     }
 
     if (!upstream.ok) {
+      if (upstream.status === 409) {
+        return res.status(409).json({
+          error: 'ACCOUNT_EXISTS',
+          message: data?.error || 'An account with this email already exists'
+        });
+      }
+
       console.error('Trial signup upstream failed', upstream.status, data);
       return res.status(upstream.status).json({
         error: 'Trial signup failed',
