@@ -1,0 +1,4 @@
+# Gitignored files copied from the main checkout into each new Claude Code
+# worktree (.gitignore syntax; only files that are also gitignored are copied).
+# A bare name matches at any depth, so a workspace's own .env.local is copied too.
+.env.local

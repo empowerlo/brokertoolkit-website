@@ -1,2 +1,8 @@
 node_modules/
 .vercel
+
+# local env files
+.env*.local
+
+# per-session agent worktrees (each is its own checkout; never commit from the parent)
+/.claude/worktrees/
